@@ -4,15 +4,25 @@ var Sounds = require('../models/sounds.js');
 var fileManager = require('../fileManager.js');
 var sound = new Command('sound', function(message) {
     this.doArg(message).then(msg => {
-        message.client.sendMessage(message.channel, msg);
+        if (msg instanceof Array)
+            msg.forEach(m => message.client.sendMessage(message.channel, m));
+        else
+            message.client.sendMessage(message.channel, msg);
     });
 }, new Map([
     ["list", function() {
         return new Promise((resolve, reject) => {
             Sounds.all().then((sounds) => {
-                let msg = "\nSounds:\n";
+                console.log(this);
+                let msg = [];
+                let k = 0;
+                msg[k] = "Sounds:\n"
                 for (var i in sounds) {
-                    msg += "Key: " + sounds[i].key +
+                    if (i % 30 == 0 && i != 0) {
+                        k++;
+                        msg[k] = "Sounds[" + k + "]:\n";
+                    }
+                    msg[k] += "Key: " + sounds[i].key +
                         ", created by: " + sounds[i].createdBy + "\n";
                 }
                 resolve(msg);
