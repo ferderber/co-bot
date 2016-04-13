@@ -11,7 +11,7 @@ var playSound =
             let soundExists = false;
             for (var i in sounds) {
                 let sound = sounds[i];
-                if (sound.key == arg) {
+                if (sound.key.toLowerCase() == arg.toLowerCase()) {
                     soundExists = true;
                     if (userChannel !== null && (bot.voiceConnection == null || bot.voiceConnection.voiceChannel.id != userChannel.id)) {
                         switchChannel(bot, userChannel).then(() => {
@@ -24,7 +24,7 @@ var playSound =
                 }
             }
             if (!soundExists)
-                message.reply("Sound not found");
+                message.client.sendMessage(message.channel, "Sound not found");
         });
     }, null);
 

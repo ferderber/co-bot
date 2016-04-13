@@ -1,3 +1,4 @@
+"use strict"
 var redis = require('redis').createClient();
 exports.add = function(key, v, createdBy, date) {
     return new Promise(function(resolve, reject) {
@@ -7,31 +8,63 @@ exports.add = function(key, v, createdBy, date) {
             'createdBy': createdBy,
             'date': date
         };
-        redis.lpush('sounds', JSON.stringify(o));
-        resolve();
+        redis.incr('numSounds', function(err, numSounds) {
+            redis.hmset(['sounds:' + numSounds,
+                'id', 'sounds:' + numSounds,
+                'key', key,
+                'filename', v,
+                'createdBy', createdBy,
+                'date', date
+            ], function(err, res) {
+                resolve();
+            });
+        });
     });
 }
 exports.all = function() {
     return new Promise(function(resolve, reject) {
-        redis.lrange('sounds', 0, -1, function(err, sounds) {
-            if (err)
-                reject(err);
-            resolve(JSON.parse("[" + sounds + "]"));
-        });
+        redis.scan(0, 'match', 'sounds:*', 'count', '300',
+            function(err, res) {
+                if (err)
+                    reject(err);
+                let multi = redis.multi();
+                res[1].forEach(soundId => {
+                    multi.hgetall(soundId);
+                });
+                multi.exec(function(err, replies) {
+                    if (err)
+                        reject(err);
+                    resolve(replies);
+                });
+            });
     })
 }
-exports.delete = function(obj) {
+exports.remove = function(id) {
     return new Promise((resolve, reject) => {
-        redis.lrem("sounds", 0, JSON.stringify(obj), function(err, numRemoved) {
+        redis.del(id, function(err, status) {
             if (err)
                 reject(err);
-            else
-                resolve(numRemoved);
+            resolve(status);
         });
-    })
+        //Wish this code worked :(
+        // this.all().then(sounds => {
+        //     let soundsLength = sounds.length;
+        //     for (var i = 0; i < soundsLength; i++) {
+        //         if (sounds[i].key == key) {
+        //             console.log('ITS IN HERE');
+        //             var filename = sounds[i].filename + "";
+        //             redis.del(sounds[i].id, function(err, status) {
+        //                 // if (err)
+        //                 // reject(err);
+        //                 console.log("FILENAME: " + filename);
+        //                 console.log("Status:  " + status);
+        //                 resolve(status, sounds[i]);
+        //             });
+        //         }
+        //     }
+        // });
+    });
 }
 exports.length = function(fn) {
-    redis.llen("sounds", function(err, size) {
-        fn(err, size);
-    });
+    //Add later
 }
