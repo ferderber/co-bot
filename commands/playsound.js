@@ -2,17 +2,18 @@
 var Command = require("../Command.js");
 var Sounds = require('../models/sounds.js');
 var path = require('path');
+var config = require('../config.js');
+var mongoose = require('mongoose');
 var playSound =
-    new Command('playsound', function(message) {
-        let arg = this.getArg(message.content);
-        let userChannel = message.author.voiceChannel;
-        let bot = message.client;
-        Sounds.all().then(sounds => {
-            let soundExists = false;
-            for (var i in sounds) {
-                let sound = sounds[i];
-                if (sound.key.toLowerCase() == arg.toLowerCase()) {
-                    soundExists = true;
+    new Command('playsound', ['ps', 'p', 'play'], function(message) {
+            let arg = this.getArg(message.content);
+            let userChannel = message.author.voiceChannel;
+            let bot = message.client;
+
+            Sounds.findOne({
+                key: arg.toLowerCase()
+            }).then(sound => {
+                if (sound) {
                     if (userChannel !== null && (bot.voiceConnection == null || bot.voiceConnection.voiceChannel.id != userChannel.id)) {
                         switchChannel(bot, userChannel).then(() => {
                             play(bot, sound.filename).catch(e => console.error(e));
@@ -20,13 +21,11 @@ var playSound =
                     } else {
                         play(bot, sound.filename).catch(e => console.error(e));
                     }
-                    break;
-                }
-            }
-            if (!soundExists)
-                message.client.sendMessage(message.channel, "Sound not found");
-        });
-    }, null);
+                } else
+                    message.client.sendMessage(message.channel, "Sound not found");
+            }).catch(e => console.error(e));
+        },
+        null);
 
 function switchChannel(bot, channel) {
     return new Promise((resolve, reject) => {
@@ -40,7 +39,10 @@ function play(bot, filename) {
     filename = path.resolve(__dirname, "../files/", filename);
     return new Promise((resolve, reject) => {
         bot.voiceConnection.playFile(filename, function(err, stream) {
-            resolve();
+            if (err)
+                reject(err);
+            else
+                resolve();
         });
     });
 }

@@ -1,7 +1,12 @@
 "use strict";
 class Command {
-    constructor(keyword, fn, args) {
-        this._keyword = keyword;
+    constructor(keyword, aliases, fn, args) {
+        if (arguments.length == 4) {
+            this._aliases = aliases;
+        } else {
+            this._aliases = null;
+        }
+        this._keyword = keyword.toLowerCase();
         this._fn = fn;
         if (typeof args !== "undefined")
             this._args = args;
@@ -11,6 +16,12 @@ class Command {
     }
     set keyword(keyword) {
         this._keyword = keyword;
+    }
+    get aliases() {
+        return this._aliases;
+    }
+    set aliases(aliases) {
+        this._aliases = aliases;
     }
     set fn(fn) {
         this._fn = fn;
@@ -34,10 +45,10 @@ class Command {
                 if (a != null) {
                     return a(splitMsg.slice(1), message).then(
                         msg => resolve(msg)).catch(
-                        err => reject());
+                        err => reject(err));
                 }
             }
-            reject();
+            reject("Not found");
 
         });
         return this._args.get(arg.substring(arg.indexOf(" ") + 1));

@@ -23,7 +23,12 @@
   "homepage": "https://github.com/matthewferderber/pleb-bot#readme",
   "dependencies": {
     "discord.js": "github:hydrabolt/discord.js#indev",
-    "redis": "^2.6.0-1",
+    "mongoose": "^4.4.12",
     "request": "^2.70.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-jshint": "^2.0.0",
+    "gulp-nodemon": "^2.0.6"
   }
 }

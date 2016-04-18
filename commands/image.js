@@ -1,6 +1,7 @@
 "use strict";
 var Command = require("../Command.js");
-var image = new Command('image', function(message) {
+var mongoose = require('mongoose');
+var image = new Command('image', ['i', 'images'], function(message) {
     let arg = this.getArg(message.content);
     arg().then(msg => {
         message.reply(msg);
