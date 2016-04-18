@@ -18,7 +18,7 @@ function convertSounds(sounds) {
             key: sounds[i].key,
             filename: sounds[i].filename,
             playCount: 0,
-            username: sounds[i].username,
+            username: sounds[i].createdBy,
             date: sounds[i].date
         });
     }

@@ -7,14 +7,16 @@ var config = require('../config.js');
 var sound = new Command('sound', ['s'], function(message) {
     this.doArg(message).then(msg => {
         if (msg instanceof Array)
-            msg.forEach(m => message.client.sendMessage(message.channel, m));
+            msg.forEach(m => setTimeout(() => message.client.sendMessage(message.channel, m), 200));
         else
             message.client.sendMessage(message.channel, msg);
     }).catch(e => console.error(e));
 }, new Map([
     ["list", function() {
         return new Promise((resolve, reject) => {
-            Sound.find({}).then(sounds => {
+            Sound.find({}).sort({
+                key: 'asc'
+            }).then(sounds => {
                 let msg = [];
                 let k = 0;
                 msg[k] = "Sounds:\n"
