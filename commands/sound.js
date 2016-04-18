@@ -7,7 +7,7 @@ var config = require('../config.js');
 var sound = new Command('sound', ['s'], function(message) {
     this.doArg(message).then(msg => {
         if (msg instanceof Array)
-            msg.forEach(m => setTimeout(() => message.client.sendMessage(message.channel, m), 200));
+            msg.forEach(m => setTimeout(() => message.client.sendMessage(message.channel, m), 500));
         else
             message.client.sendMessage(message.channel, msg);
     }).catch(e => console.error(e));

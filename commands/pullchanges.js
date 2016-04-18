@@ -5,7 +5,7 @@ var path = require('path');
 
 var pullChanges = new Command('pullchanges', ['pullchange'], function(msg) {
         let bot = msg.client;
-        if (msg.includes("confirm"))
+        if (msg.content.includes("confirm"))
             bot.sendMessage(msg.channel, "fetching updates...", function(error, sentMsg) {
                 console.log("Updating pleb-bot");
                 var spawn = require('child_process').spawn;
