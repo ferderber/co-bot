@@ -11,7 +11,9 @@ var playSound =
             let bot = message.client;
 
             Sounds.findOne({
-                key: arg.toLowerCase()
+                "key": {
+                    $regex: new RegExp("^" + arg.toLowerCase(), "i")
+                }
             }).then(sound => {
                 if (sound) {
                     if (userChannel !== null && (bot.voiceConnection == null || bot.voiceConnection.voiceChannel.id != userChannel.id)) {
