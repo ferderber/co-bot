@@ -4,14 +4,13 @@
   "description": "Discord Bot for PlebLvl Server",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/matthewferderber/pleb-bot.git"
   },
   "keywords": [
-    "Pleb",
     "Bot",
     "Discord"
   ],
@@ -27,8 +26,10 @@
     "request": "^2.70.0"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "gulp": "^3.9.1",
     "gulp-jshint": "^2.0.0",
-    "gulp-nodemon": "^2.0.6"
+    "gulp-nodemon": "^2.0.6",
+    "mocha": "^2.4.5"
   }
 }

@@ -1,17 +1,18 @@
 "use strict";
 var Discord = require("discord.js");
-var Sounds = require('./models/sounds.js');
-var images = require("./commands/image.js");
-var sound = require("./commands/sound.js");
-var Command = require("./Command.js");
+var Sounds = require('./lib/models/sounds.js');
+var Command = require("./lib/Command.js");
 var config = require('./config.js');
-var playSound = require("./commands/playsound.js");
-var pullChanges = require("./commands/pullchanges.js");
+var soundCommand = require("./lib/commands/SoundCommand.js");
+var playSoundCommand = require("./lib/commands/PlaySoundCommand.js");
+var cleanCommand = require("./lib/commands/CleanCommand.js");
+var imageCommand = require("./lib/commands/ImageCommand.js");
+var pullChanges = require("./lib/commands/PullChangesCommand.js");
 var mongoose = require("mongoose");
 var bot = new Discord.Client();
 mongoose.connect(config.db);
 
-var commands = [playSound, sound, pullChanges];
+var commands = [playSoundCommand, soundCommand, cleanCommand];
 bot.on("message", function(message) {
     if (message.content.charAt(0) === '!') {
         doCommand(message);
@@ -38,7 +39,7 @@ function doCommand(message) {
         let cmdString = message.content.substring(1, space).toLowerCase();
         if (cmdString === command.keyword ||
             (command.aliases != null && command.aliases.some(a => a.toLowerCase() === cmdString ? true : false))) {
-            return command.exec(message).then(() => {}).catch(e => console.error(e));
+            return command.execute(message).then(() => {}).catch(e => console.error(e));
         }
     });
 }
