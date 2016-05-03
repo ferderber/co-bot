@@ -17,16 +17,18 @@ var Discord = require("discord.js"),
 mongoose.connect(config.db);
 
 var commands = [playSoundCommand, soundCommand, cleanCommand, profileCommand];
-userListeners(bot);
 
 bot.on("message", function(message) {
-    if (message.content.charAt(0) === '!') {
+    if (message.content.charAt(0) === '!')
         doCommand(message);
-    }
 });
 
 bot.on("ready", function() {
     console.log("PlebBot is online!!");
+    userListeners(bot);
+    if (config.env == "dev") {
+        bot.setStatus("online", "IN DEVELOPMENT").catch(err => console.error(err));
+    }
 });
 bot.on('error', function(err) {
     console.error(err);
