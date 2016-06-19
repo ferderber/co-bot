@@ -22,7 +22,6 @@ bot.on("message", function(message) {
     if (message.content.charAt(0) === '!')
         doCommand(message);
 });
-
 bot.on("ready", function() {
     console.log("PlebBot is online!!");
     userListeners(bot);
