@@ -11,8 +11,9 @@ var Discord = require("discord.js"),
     profileCommand = require("./lib/commands/ProfileCommand.js"),
     pullChanges = require("./lib/commands/PullChangesCommand.js"),
     userListeners = require("./lib/userListeners.js"),
-    mongoose = require("mongoose"),
-    bot = new Discord.Client();
+    mongoose = require("mongoose");
+
+const bot = new Discord.Client();
 
 mongoose.connect(config.db);
 
@@ -26,21 +27,18 @@ bot.on("ready", function() {
     console.log("PlebBot is online!!");
     userListeners(bot);
     if (config.env == "dev") {
-        bot.setStatus("online", "IN DEVELOPMENT").catch(err => console.error(err));
+        bot.user.setStatus("online", "IN DEVELOPMENT").catch(err => console.error(err));
     }
 });
 bot.on('error', function(err) {
     console.error(err);
 });
-bot.loginWithToken(config.discordToken, function(err, token) {
-    if (err)
-        console.error(err);
-});
+bot.login(config.discordToken);
 
 function doCommand(message) {
     if (/^!(help|h)$/.test(message.content))
         helpCommand.execute(message, commands).then(((msg) => {
-            message.client.sendMessage(message.channel, msg);
+            message.channel.sendMessage(msg);
         }));
     else
         commands.forEach(function(command) {
