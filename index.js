@@ -33,7 +33,7 @@ bot.on("ready", function() {
 bot.on('error', function(err) {
     console.error(err);
 });
-bot.login(config.discordToken);
+bot.login(config.discordToken).catch(err => console.error(err));
 
 function doCommand(message) {
     if (/^!(help|h)$/.test(message.content))
