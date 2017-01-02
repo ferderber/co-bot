@@ -10,6 +10,7 @@ var Discord = require("discord.js"),
     helpCommand = require("./lib/commands/HelpCommand.js"),
     profileCommand = require("./lib/commands/ProfileCommand.js"),
     pullChanges = require("./lib/commands/PullChangesCommand.js"),
+    wikiCommand = require('./lib/commands/WikiCommand.js'),
     userListeners = require("./lib/userListeners.js"),
     mongoose = require("mongoose");
 
@@ -17,20 +18,22 @@ const bot = new Discord.Client();
 
 mongoose.connect(config.db);
 
-var commands = [playSoundCommand, soundCommand, cleanCommand, profileCommand];
+var commands = [playSoundCommand, soundCommand, cleanCommand, profileCommand, wikiCommand];
 
-bot.on("message", function(message) {
+bot.on('message', function (message) {
     if (message.content.charAt(0) === '!')
         doCommand(message);
 });
-bot.on("ready", function() {
-    console.log("PlebBot is online!!");
+bot.on('ready', function () {
+    console.log('PlebBot is online!!');
     userListeners(bot);
-    if (config.env == "dev") {
-        bot.user.setStatus("online", "IN DEVELOPMENT").catch(err => console.error(err));
-    }
+    if (config.env == 'dev') {
+        bot.user.setStatus('dnd').catch(err => console.error(err));
+        bot.user.setGame('In Development').catch(err => console.error(err));
+    } else
+        bot.user.setStatus('online').catch(err => console.error(err));
 });
-bot.on('error', function(err) {
+bot.on('error', function (err) {
     console.error(err);
 });
 bot.login(config.discordToken).catch(err => console.error(err));
@@ -41,7 +44,7 @@ function doCommand(message) {
             message.channel.sendMessage(msg);
         }));
     else
-        commands.forEach(function(command) {
+        commands.forEach(function (command) {
             let space = message.content.indexOf(' ');
             if (space === -1) {
                 space = message.content.length;
