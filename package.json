@@ -4,6 +4,7 @@
   "description": "Discord Bot for PlebLvl Server",
   "main": "index.js",
   "scripts": {
+    "start": "node --harmony index.js",
     "test": "mocha"
   },
   "repository": {
@@ -22,6 +23,7 @@
   "homepage": "https://github.com/matthewferderber/pleb-bot#readme",
   "dependencies": {
     "discord.js": "^11.0.0",
+    "discord.js-commando": "^0.8.3",
     "erlpack": "github:hammerandchisel/erlpack#master",
     "mongoose": "^4.6.1",
     "node-opus": "^0.2.4",
@@ -37,7 +39,7 @@
   },
   "eslintConfig": {
     "parserOptions": {
-      "ecmaVersion": 6
+      "ecmaVersion": 8
     },
     "env": {
       "node": true

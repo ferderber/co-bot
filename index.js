@@ -1,58 +1,41 @@
-"use strict";
-var Discord = require("discord.js"),
-    Sounds = require('./lib/models/sounds.js'),
-    Command = require("./lib/Command.js"),
-    config = require('./config.js'),
-    soundCommand = require("./lib/commands/SoundCommand.js"),
-    playSoundCommand = require("./lib/commands/PlaySoundCommand.js"),
-    cleanCommand = require("./lib/commands/CleanCommand.js"),
-    imageCommand = require("./lib/commands/ImageCommand.js"),
-    helpCommand = require("./lib/commands/HelpCommand.js"),
-    profileCommand = require("./lib/commands/ProfileCommand.js"),
-    pullChanges = require("./lib/commands/PullChangesCommand.js"),
-    wikiCommand = require('./lib/commands/WikiCommand.js'),
-    userListeners = require("./lib/userListeners.js"),
-    mongoose = require("mongoose");
+const mongoose = require("mongoose");
+const path = require('path');
+const config = require('./config.js');
+const Commando = require('discord.js-commando');
+const client = new Commando.Client({
+    owner: config.ownerId
+});
+client
+    .on('error', console.error)
+    .on('warn', console.warn)
+    .on('ready', () => {
+        console.log(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
+        if (config.env === 'dev') {
+            client.user.setPresence({
+                game: {
+                    name: 'In Development'
+                }
+            });
+        }
+    })
+    .on('disconnect', () => {
+        console.warn('Disconnected!');
+    })
+    .on('reconnect', () => {
+        console.warn('Reconnecting...');
+    })
+    .on('commandError', (cmd, err) => {
+        if (err instanceof Commando.FriendlyError) return;
+        console.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
+    });
 
-const bot = new Discord.Client();
+require('./lib/userListeners')(client);
 
+client.registry
+    .registerGroup('admin', 'Admin')
+    .registerGroup('fun', 'Fun')
+    .registerGroup('search', 'Search')
+    .registerDefaults()
+    .registerCommandsIn(path.join(__dirname, 'lib', 'commands'));
+client.login(config.discordToken);
 mongoose.connect(config.db);
-
-var commands = [playSoundCommand, soundCommand, cleanCommand, profileCommand, wikiCommand];
-
-bot.on('message', function (message) {
-    if (message.content.charAt(0) === '!')
-        doCommand(message);
-});
-bot.on('ready', function () {
-    console.log('PlebBot is online!!');
-    userListeners(bot);
-    if (config.env == 'dev') {
-        bot.user.setStatus('dnd').catch(err => console.error(err));
-        bot.user.setGame('In Development').catch(err => console.error(err));
-    } else
-        bot.user.setStatus('online').catch(err => console.error(err));
-});
-bot.on('error', function (err) {
-    console.error(err);
-});
-bot.login(config.discordToken).catch(err => console.error(err));
-
-function doCommand(message) {
-    if (/^!(help|h)$/.test(message.content))
-        helpCommand.execute(message, commands).then(((msg) => {
-            message.channel.sendMessage(msg);
-        }));
-    else
-        commands.forEach(function (command) {
-            let space = message.content.indexOf(' ');
-            if (space === -1) {
-                space = message.content.length;
-            }
-            let cmdString = message.content.substring(1, space).toLowerCase();
-            if (cmdString === command.keyword ||
-                (command.aliases != null && command.aliases.some(a => a.toLowerCase() === cmdString ? true : false))) {
-                return command.execute(message).then(() => {}).catch(e => console.error(e));
-            }
-        });
-}

@@ -6,6 +6,7 @@ switch (process.env.NODE_ENV) {
             db: 'mongodb://localhost/plebBot',
             redis: process.env.REDIS_URL || '127.0.0.1',
             discordToken: process.env.DISCORD_BOT_TOKEN,
+            ownerId: process.env.DISCORD_BOT_OWNER_ID || ''
         };
         break;
     case 'prod':
@@ -14,6 +15,7 @@ switch (process.env.NODE_ENV) {
             db: (process.env.MONGO_URL || 'mongodb://localhost') + '/plebBot',
             redis: process.env.REDIS_URL,
             discordToken: process.env.DISCORD_BOT_TOKEN,
+            ownerId: process.env.DISCORD_BOT_OWNER_ID || ''
         };
         break;
     default:
@@ -22,6 +24,7 @@ switch (process.env.NODE_ENV) {
             db: 'mongodb://localhost/plebBot',
             redis: process.env.REDIS_URL,
             discordToken: process.env.DISCORD_BOT_TOKEN,
+            ownerId: process.env.DISCORD_BOT_OWNER_ID || ''
         };
         break;
 }
