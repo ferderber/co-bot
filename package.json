@@ -23,7 +23,7 @@
   "homepage": "https://github.com/matthewferderber/pleb-bot#readme",
   "dependencies": {
     "discord.js": "^11.0.0",
-    "discord.js-commando": "^0.8.3",
+    "discord.js-commando": "^0.8.4",
     "erlpack": "github:hammerandchisel/erlpack#master",
     "mongoose": "^4.6.1",
     "node-opus": "^0.2.4",
