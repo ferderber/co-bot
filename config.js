@@ -9,7 +9,7 @@ switch (process.env.NODE_ENV) {
             ownerId: process.env.DISCORD_BOT_OWNER_ID || ''
         };
         break;
-    case 'prod':
+    case 'production':
         config = {
             env: 'prod',
             db: (process.env.MONGO_URL || 'mongodb://localhost') + '/plebBot',
