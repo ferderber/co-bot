@@ -1,6 +1,6 @@
 **co-bot** is a Discord.JS bot. It plays sounds, clears chat, gives players EXP for being in the chat 
 
-#Requirements
+# Requirements
 - MongoDB
 
 # Installation
