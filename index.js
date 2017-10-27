@@ -35,4 +35,4 @@ client.registerCommandDirectory(path.join(commandsPath, 'admin'))
 client.registerCommandDirectory(path.join(commandsPath, 'fun'))
 
 client.login(config.discordToken);
-mongoose.connect(config.db);
+mongoose.connect(config.db, { useMongoClient: true });
