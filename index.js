@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const path = require('path');
+const commandsPath = path.join(__dirname, 'lib', 'commands');
 const config = require('./config.js');
 const CommandClient = require('djs-cc');
 const client = new CommandClient.Client();
@@ -29,13 +30,9 @@ client
 
 require('./lib/userListeners')(client);
 
-
-client.registerCommand(new (require('./lib/commands/search/ProfileCommand')));
-client.registerCommand(new (require('./lib/commands/search/WikiCommand')));
-client.registerCommand(new (require('./lib/commands/admin/CleanCommand')));
-client.registerCommand(new (require('./lib/commands/fun/SoundCommand')));
-client.registerCommand(new (require('./lib/commands/fun/PlaySoundCommand')));
-client.registerCommand(new (require('./lib/commands/fun/RemindCommand')));
+client.registerCommandDirectory(path.join(commandsPath, 'search'))
+client.registerCommandDirectory(path.join(commandsPath, 'admin'))
+client.registerCommandDirectory(path.join(commandsPath, 'fun'))
 
 client.login(config.discordToken);
 mongoose.connect(config.db);
