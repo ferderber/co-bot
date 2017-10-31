@@ -28,6 +28,7 @@
     "discord.js-commando": "^0.9.0",
     "djs-cc": "^0.3.2",
     "erlpack": "^0.1.2",
+    "leaguejs": "^1.5.7",
     "mongoose": "^4.12.4",
     "musicmetadata": "^2.0.5",
     "node-opus": "^0.2.7",
