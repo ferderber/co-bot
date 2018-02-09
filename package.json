@@ -34,7 +34,7 @@
     "node-opus": "^0.2.7",
     "wikijs": "^4.3.4",
     "ws": "^3.2.0",
-    "ytdl-core": "^0.18.7"
+    "ytdl-core": "^0.20.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
