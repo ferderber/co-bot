@@ -29,7 +29,6 @@
     "djs-cc": "^0.3.2",
     "erlpack": "github:discordapp/erlpack",
     "leaguejs": "^1.5.7",
-    "libsodium-wrappers": "^0.7.3",
     "mongoose": "^4.12.4",
     "musicmetadata": "^2.0.5",
     "node-opus": "^0.2.7",
