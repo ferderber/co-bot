@@ -1,6 +1,6 @@
 {
   "name": "co-bot",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Discord Bot for Cobaltium Server",
   "main": "index.js",
   "scripts": {
@@ -25,7 +25,7 @@
   "dependencies": {
     "bufferutil": "^3.0.2",
     "discord.js": "^11.3.0",
-    "djs-cc": "^0.4.1",
+    "djs-cc": "^0.4.2",
     "erlpack": "github:discordapp/erlpack",
     "leaguejs": "^1.5.7",
     "mongoose": "^4.12.4",
