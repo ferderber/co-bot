@@ -24,8 +24,7 @@
   "homepage": "https://github.com/matthewferderber/co-bot#readme",
   "dependencies": {
     "bufferutil": "^4.0.0",
-    "discord.js": "^11.4.2",
-    "djs-cc": "^0.5.0",
+    "djs-cc": "0.6.2",
     "erlpack": "github:discordapp/erlpack",
     "leaguejs": "^1.5.7",
     "mongoose": "^4.12.4",
