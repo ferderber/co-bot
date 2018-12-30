@@ -4,7 +4,6 @@ const {
     Argument,
     ArgumentType
 } = require('djs-cc');
-const mm = require('musicmetadata');
 
 const Sound = require('../../models/sounds.js');
 const config = require('../../../config.js');
