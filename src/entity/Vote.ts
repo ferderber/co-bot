@@ -3,13 +3,13 @@ import {User} from './User';
 import {Sound} from "./Sound";
 
 @Entity()
-@Index(["user", "sound"], { unique: true })
+// @Index(["user", "sound"], { unique: true })
 export class Vote {
 
-    @ManyToOne(() => User, (u) => u.votes)
+    @ManyToOne(() => User, (u) => u.votes, {primary: true})
     public user: User;
 
-    @ManyToOne(() => Sound)
+    @ManyToOne(() => Sound, {primary: true})
     public sound: Sound;
 
     @Column()

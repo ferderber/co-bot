@@ -1,8 +1,9 @@
 import * as mongoose from 'mongoose';
 import * as path from 'path';
-const commandsPath = path.join(__dirname, 'lib', 'commands');
-import config from './Config';
+import Config from './Config';
 import * as CommandClient from 'djs-cc';
+
+const commandsPath = path.join(__dirname, 'lib', 'commands');
 
 const client = new CommandClient.Client();
 client
@@ -10,7 +11,7 @@ client
     .on('warn', console.warn)
     .on('ready', () => {
         console.log(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
-        if (config.env === 'dev') {
+        if (Config.env === 'dev') {
             client.user.setPresence({
                 status: 'dnd',
                 afk: false,
@@ -31,5 +32,5 @@ client.registerCommandDirectory(path.join(commandsPath, 'search'))
 client.registerCommandDirectory(path.join(commandsPath, 'admin'))
 client.registerCommandDirectory(path.join(commandsPath, 'fun'))
 
-client.login(config.discordToken);
-mongoose.connect(config.db, { useMongoClient: true });
+client.login(Config.discordToken);
+mongoose.connect(Config.db, { useMongoClient: true });

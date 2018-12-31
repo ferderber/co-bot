@@ -19,7 +19,7 @@ export class Image {
     @Column({default: 0})
     public displayCount: number;
 
-    @Column()
+    @Column({default: new Date()})
     public dateUploaded: Date;
 
     @ManyToOne(() => User, (u) => u.images)

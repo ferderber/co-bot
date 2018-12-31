@@ -3,7 +3,6 @@ import {Client} from 'djs-cc';
 import {User as UserEntity} from './entity/User';
 import { getManager } from "typeorm";
 
-
 export function registerListeners(bot: Client): void {
     bot.on('message', (message) => {
         if (/^!\w+(\s+[\w"]+)+$/.test(message.content)) {
@@ -12,8 +11,6 @@ export function registerListeners(bot: Client): void {
             giveExperience(message.member, 2);
         }
     });
-
-    // bot.on('guildMemberAdd', (user: GuildMember) => {});
 
     setInterval(() => {
         bot.guilds.each((guild) => {

@@ -22,10 +22,10 @@ export class Sound {
     @Column({default: 0})
     public playCount: number;
 
-    @Column()
+    @Column({default: 0})
     public points: number;
 
-    @Column()
+    @Column({default: new Date()})
     public dateUploaded: Date;
 
     @ManyToOne(() => User, (u) => u.sounds)

@@ -12,19 +12,19 @@ export class User {
     @Column()
     public username: string;
 
-    @Column()
+    @Column({nullable: true})
     public avatar: string;
 
-    @Column()
+    @Column({default: 1})
     public level: number;
 
-    @Column()
+    @Column({default: 0})
     public xp: number;
 
-    @Column()
+    @Column({default: new Date()})
     public joinDate: Date
 
-    @Column()
+    @Column({default: 0})
     public soundPlays: number;
 
     @OneToMany(() => Image, (i) => i.user)
