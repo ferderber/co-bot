@@ -1,14 +1,12 @@
-const Image = require('../../models/image');
-const Discord = require('discord.js');
-const fileManager = require('../../fileManager.js');
-const mongoose = require('mongoose');
-const {
-    Command,
-    Argument,
-    ArgumentType
-} = require('djs-cc');
+import { Image } from '../../entity/Image';
+import { User } from '../../entity/User';
+import { MessageAttachment } from 'discord.js';
+import * as FileManager from '../../FileManager.js';
+import { Command, Argument, ArgumentType, Message } from 'djs-cc';
+import { getManager } from 'typeorm';
+import { v4 } from 'uuid';
 
-module.exports = class ImageCommand extends Command {
+export class ImageCommand extends Command {
     constructor() {
         super({
             name: 'image',
@@ -34,7 +32,7 @@ module.exports = class ImageCommand extends Command {
             ]
         });
     }
-    async run(msg, args) {
+    async run(msg: Message, args: Map<string, any>) {
         let operationOrImage = args.get('operationOrImageName');
         let imageName = args.get('imageName');
         let imageUrl = args.get('imageUrl');
@@ -57,49 +55,54 @@ module.exports = class ImageCommand extends Command {
             msg.reply('Provide a url or attach an image');
         }
     }
-    async add(msg, imageName, imageUrl) {
-        var url;
+    async add(msg: Message, imageName: string, imageUrl: string) {
+        const manager = getManager();
+        var url: string;
+        var id;
         if (imageUrl) {
             url = imageUrl;
+            id = v4();
         } else if (msg.attachments) {
             url = msg.attachments.first().url;
+            id = msg.attachments.first().id;
         }
         var fileType = url.substring(url.lastIndexOf('.'));
-        var id = mongoose.Types.ObjectId();
-        await fileManager.download(url, id + fileType)
         var img = new Image({
-            _id: id,
+            id: id,
             key: imageName,
             filename: id + fileType,
-            user: msg.author.id,
-            date: new Date()
+            fileType: fileType,
+            user: new User({ id: msg.author.id}),
+            dateUploaded: new Date()
         });
-        img = img.save();
+        img = await manager.save(img);
+        await FileManager.download(url, img.filename)
         msg.reply("Image added");
     }
-    async remove(msg, imageName) {
-        var image = await Image.findOneAndRemove({
-            "key": {
-                $regex: new RegExp("^" + imageName.toLowerCase() + "$", "i")
-            }
-        });
+
+    async remove(msg: Message, imageName: string) {
+        const manager = getManager();
+        const image = await manager.createQueryBuilder(Image, 'u')
+            .where("key ILIKE :key", { key: imageName.toLowerCase()})
+            .getOne()
+        manager.remove(image);
         if (image) {
-            await fileManager.remove(image.filename);
+            await FileManager.remove(image.filename);
             console.log(`Image ${image.key} removed by: ${msg.author.username}`);
             msg.reply(`${image.key} has been removed`);
         } else {
             msg.reply(`${imageName} not found`);
         }
     }
-    async display(msg, imageName) {
-        var image = await Image.findOne({
-            "key": {
-                $regex: new RegExp("^" + imageName.toLowerCase() + "$", "i")
-            }
-        });
+
+    async display(msg: Message, imageName: string) {
+        const manager = getManager();
+        const image = await manager.createQueryBuilder(Image, 'u')
+            .where("key ILIKE :key", { key: imageName.toLowerCase()})
+            .getOne()
         if (image) {
             msg.delete();
-            msg.channel.send(`Image requested by: ${msg.author}`, new Discord.MessageAttachment(fileManager.getPath(image.filename)));
+            msg.channel.send(`Image requested by: ${msg.author}`, new MessageAttachment(FileManager.getPath(image.filename)));
         } else {
             msg.reply('Image not found');
         }

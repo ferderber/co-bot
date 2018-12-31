@@ -1,13 +1,9 @@
-const mongoose = require('mongoose');
-const {
-    Command,
-    Argument,
-    ArgumentType
-} = require('djs-cc');
+import { Command, Argument, ArgumentType, Message } from 'djs-cc';
 
-const Sound = require('../../models/sounds.js');
-const config = require('../../../config.js');
-const fileManager = require('../../fileManager.js');
+import {Sound} from '../../entity/Sound';
+import { User } from "entity/User";
+import { getManager } from "typeorm";
+import * as FileManager from '../../FileManager';
 
 module.exports = class SoundCommand extends Command {
     constructor() {
@@ -27,29 +23,29 @@ module.exports = class SoundCommand extends Command {
             })]
         });
     }
-    async run(msg, args) {
+    async run(msg: Message, args: Map<string, any>) {
+        const manager = getManager();
         if (args.get('operation') === 'add') {
             let attachment = msg.attachments.first();
             if (attachment) {
-                var id = mongoose.Types.ObjectId();
                 var fileType = attachment.name.substring(attachment.name.lastIndexOf('.'));
-                await fileManager.download(attachment.url, id + fileType);
-                const metadata = await fileManager.getMetadata(id + fileType);
+                await FileManager.download(attachment.url, attachment.id + fileType);
+                const metadata = await FileManager.getMetadata(attachment.id + fileType);
                 var sound = new Sound({
-                    _id: id,
                     key: args.get('sound'),
-                    filename: id + fileType,
-                    user: msg.author.id,
-                    date: new Date(),
-                    duration: metadata.duration
+                    fileType: fileType,
+                    filename: attachment.id + fileType,
+                    id: attachment.id,
+                    user: new User({id: msg.author.id}),
+                    dateUploaded: new Date(),
+                    duration: metadata.format.duration
                 });
                 try {
-                    sound = await sound.save();
-                    sound = await sound.populate('user', 'username').execPopulate();
+                    sound = await manager.save(sound);
                     msg.reply("Sound added");
                 } catch (e) {
                     if (e.code == 11000) {
-                        fileManager.remove(id + fileType);
+                        FileManager.remove(sound.filename);
                         msg.reply("Sound already exists");
                     } else {
                         console.log(e);
@@ -60,13 +56,12 @@ module.exports = class SoundCommand extends Command {
                 msg.reply("This command must be used in the comment of an attachment.");
             }
         } else if (args.get('operation') === 'remove') {
-            let sound = await Sound.findOneAndRemove({
-                "key": {
-                    $regex: new RegExp("^" + args.get('sound').toLowerCase() + "$", "i")
-                }
-            });
+            let sound = await manager.createQueryBuilder(Sound, 'u')
+                .where("key ILIKE :key", { key: args.get('sound')})
+                .getOne();
+                manager.remove(sound);
             if (sound) {
-                await fileManager.remove(sound.name);
+                await FileManager.remove(sound.filename);
                 console.log(`Sound ${sound.key} removed by: ${msg.author.username}`);
                 msg.reply(`${sound.key} has been removed`);
             } else {

@@ -1,15 +1,10 @@
-const User = require('../../models/user.js');
-const {
-    Command,
-    Argument,
-    ArgumentType
-} = require('djs-cc');
-module.exports = class RemindCommand extends Command {
+import { Command, Argument, ArgumentType, Message } from 'djs-cc';
+
+export class RemindCommand extends Command {
     constructor() {
         super({
             name: 'remind',
-            description: 'Sends a reminder message to a user',
-            details: 'Waits the specified amount of time before reminding a user with a message',
+            description: 'Sends a reminder message to a user after the specified amount of time',
             usage: 'remind @Cobalt#7239 60 It\'s been 60 seconds',
             args: [
                 new Argument({
@@ -30,7 +25,7 @@ module.exports = class RemindCommand extends Command {
             ]
         });
     }
-    async run(msg, args) {
+    async run(msg: Message, args: Map<string, any>) {
         await msg.reply(':ok_hand: ' + args.get('time') + ' seconds');
         await setTimeout(() => msg.channel.send(args.get('user') + ': ' + args.get('message')), args.get('time') * 1000);
     }

@@ -1,8 +1,9 @@
-const mongoose = require("mongoose");
-const path = require('path');
+import * as mongoose from 'mongoose';
+import * as path from 'path';
 const commandsPath = path.join(__dirname, 'lib', 'commands');
-const config = require('./config.js');
-const CommandClient = require('djs-cc');
+import config from './Config';
+import * as CommandClient from 'djs-cc';
+
 const client = new CommandClient.Client();
 client
     .on('error', console.error)
@@ -11,9 +12,9 @@ client
         console.log(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
         if (config.env === 'dev') {
             client.user.setPresence({
-                game: {
-                    name: 'In Development'
-                }
+                status: 'dnd',
+                afk: false,
+                activity: {name: 'In Development'}
             });
         }
     })
@@ -22,10 +23,6 @@ client
     })
     .on('reconnect', () => {
         console.warn('Reconnecting...');
-    })
-    .on('commandError', (cmd, err) => {
-        if (err instanceof Commando.FriendlyError) return;
-        console.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
     });
 
 require('./lib/userListeners')(client);

@@ -1,13 +1,11 @@
-const Discord = require('discord.js');
-const LeagueJS = require('leaguejs');
-const config = require('../../../config');
-const {
-    Command,
-    Argument,
-    ArgumentType
-} = require('djs-cc');
+import { LeagueJS } from 'leaguejs';
+import Config from '../../Config';
+import { Command, Argument, ArgumentType, Message } from 'djs-cc';
+
 
 module.exports = class LeagueLookupCommand extends Command {
+    private api: LeagueJS;
+    private champions: any[];
     constructor() {
         super({
             name: 'leaguelookup',
@@ -22,7 +20,7 @@ module.exports = class LeagueLookupCommand extends Command {
                 })
             ]
         });
-        this.api = new LeagueJS(config.leagueToken, {
+        this.api = new LeagueJS(Config.leagueToken, {
             PLATFORM_ID: 'na1'
         });
         this.getChampions();
@@ -35,7 +33,7 @@ module.exports = class LeagueLookupCommand extends Command {
         }
         return this.champions;
     }
-    getChampionPlays(matchList) {
+    getChampionPlays(matchList: any) {
         let champMap = new Map();
         for (var i = 0; i < matchList.length; i++) {
             let champion = champMap.get(matchList[i].champion);
@@ -52,17 +50,17 @@ module.exports = class LeagueLookupCommand extends Command {
         let champList = [...champMap.values()].sort((champA, champB) => champB.numPlayed - champA.numPlayed);
         return champList;
     }
-    getParticipantByAccountId(game, accountId) {
+    getParticipantByAccountId(game: any, accountId: any) {
         //Find summoner's participant ID
-        let participantId = game.participantIdentities.find(participant =>
+        let participantId = game.participantIdentities.find((participant: any) =>
             participant.player.accountId === accountId).participantId;
         //Find summoner's participant entry
-        return game.participants.find((p) => p.participantId === participantId);
+        return game.participants.find((p: any) => p.participantId === participantId);
     }
-    async run(msg, args) {
+    async run(msg: Message, args: Map<string, any>) {
         const username = args.get('username').replace(' ', '');
         if (username) {
-            var tempMsg = await msg.reply('Loading data...');
+            var tempMsg = <Message> await msg.reply('Loading data...');
             try {
                 const summoner = await this.api.Summoner.gettingByName(username);
                 if (summoner) {
@@ -114,8 +112,8 @@ module.exports = class LeagueLookupCommand extends Command {
             }
         }
     }
-    getChampionName(id) {
-        return this.champions[`${id}`].name;
+    getChampionName(id: number) {
+        return this.champions[id].name;
     }
 
 }

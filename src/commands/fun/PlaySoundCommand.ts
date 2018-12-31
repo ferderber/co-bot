@@ -1,13 +1,11 @@
-const Sounds = require('../../models/sounds.js');
-const User = require('../../models/user.js');
-const path = require('path');
-const os = require('os');
-const ytdl = require('ytdl-core');
-const {
-    Command,
-    Argument,
-    ArgumentType
-} = require('djs-cc');
+import { Sound } from '../../entity/Sound';
+import { User } from '../../entity/User';
+import * as path from 'path';
+import * as os from 'os';
+import * as ytdl from 'ytdl-core';
+import { Command, Argument, ArgumentType, Client, Message } from 'djs-cc';
+import { VoiceChannel, VoiceConnection, GuildMember } from 'discord.js';
+import { getManager } from 'typeorm';
 
 module.exports = class PlaySoundCommand extends Command {
     constructor() {
@@ -27,7 +25,8 @@ module.exports = class PlaySoundCommand extends Command {
             })]
         });
     }
-    async run(msg, args) {
+    async run(msg: Message, args: Map<string, any>) {
+        const manager = getManager();
         let bot = msg.client;
         let voiceChannel = msg.member.voice.channel;
         const streamOptions = {
@@ -35,9 +34,10 @@ module.exports = class PlaySoundCommand extends Command {
         };
         if (voiceChannel) {
             if (args.get('sound') === undefined) {
-                const count = await Sounds.count();
-                const random = Math.floor(Math.random() * count);
-                const sound = await Sounds.findOne().skip(random);
+                const sound = await manager.createQueryBuilder(Sound, 'sound')
+                    .orderBy('RANDOM()')
+                    .limit(1)
+                    .getOne();
                 if (sound) {
                     let con = await this.connectToVoiceChannel(bot, voiceChannel);
                     if (con) {
@@ -58,11 +58,9 @@ module.exports = class PlaySoundCommand extends Command {
                     }
                 }
             } else {
-                const sound = await Sounds.findOne({
-                    "key": {
-                        $regex: new RegExp("^" + args.get('sound').toLowerCase() + "$", "i")
-                    }
-                });
+                const sound = await manager.createQueryBuilder(User, 'u')
+                    .where("key ILIKE :key", { key: args.get('sound')})
+                    .execute();
                 if (sound) {
                     let con = await this.connectToVoiceChannel(bot, voiceChannel);
                     if (con) {
@@ -77,7 +75,7 @@ module.exports = class PlaySoundCommand extends Command {
         }
     }
 
-    async connectToVoiceChannel(bot, voiceChannel) {
+    async connectToVoiceChannel(bot: Client, voiceChannel: VoiceChannel) {
         const existingConnection = bot.voiceConnections.find(con => con.channel.id === voiceChannel.id);
         if (existingConnection === null || existingConnection === undefined || existingConnection.channel.id != voiceChannel.id) {
             const connections = bot.voiceConnections.array();
@@ -92,7 +90,7 @@ module.exports = class PlaySoundCommand extends Command {
         }
     }
 
-    async playSound(sound, user, con) {
+    async playSound(sound: Sound, user: GuildMember, con: VoiceConnection) {
         this.incrementSoundsPlayCount(sound);
         this.incrementUsersPlayCount(user);
         try {
@@ -102,21 +100,21 @@ module.exports = class PlaySoundCommand extends Command {
         }
     }
 
-    async incrementSoundsPlayCount(sound) {
+    async incrementSoundsPlayCount(sound: Sound) {
+        const manager = getManager();
         sound.playCount++;
         try {
-            await sound.save();
+            await manager.save(manager);
         } catch (err) {
             console.error(err);
         }
     }
-    async incrementUsersPlayCount(member) {
-        const user = await User.findOne({
-            _id: member.id
-        });
+    async incrementUsersPlayCount(member: GuildMember) {
+        const manager = getManager();
+        const user = await manager.findOne(User, member.id);
         user.soundPlays++;
         try {
-            await user.save();
+            await manager.save(user);
         } catch (err) {
             console.error(err);
         }

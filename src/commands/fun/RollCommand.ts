@@ -1,10 +1,6 @@
-const {
-    Command,
-    Argument,
-    ArgumentType
-} = require('djs-cc');
+import { Command, Argument, ArgumentType, Message } from 'djs-cc';
 
-module.exports = class RollCommand extends Command {
+export class RollCommand extends Command {
     constructor() {
         super({
             name: 'roll',
@@ -25,7 +21,7 @@ module.exports = class RollCommand extends Command {
             ]
         });
     }
-    async run(msg, args) {
+    async run(msg: Message, args: Map<string, any>) {
         let roll = 0;
         let rollType = 'none';
         let iconUrl = 'https://i.imgur.com/aw0Oa4p.png';
@@ -48,7 +44,7 @@ module.exports = class RollCommand extends Command {
         
         } else {
             // no args or incorrect args yields a 4chan-esque 6-digit message ID roll
-            roll = msg.id.slice(-6);
+            roll = parseInt(msg.id.slice(-6));
             rollType = 'Message ID Roll';
             iconUrl = 'https://i.imgur.com/DYxXcYY.png';
         }

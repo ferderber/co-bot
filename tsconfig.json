@@ -1,17 +1,18 @@
 {
     "compilerOptions": {
-        "module": "amd",
+        "lib": ["es5", "es6"],
+        "module": "commonjs",
+        "target": "es6",
         "noImplicitAny": true,
-        "removeComments": true,
-        "preserveConstEnums": true,
-        "outDir": "./dist",
-        "sourceMap": true
+        "outDir": "dist",
+        "rootDir": "src",
+        "baseUrl": "src",
+        "sourceMap": true,
+        "types": ["node"],
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
     },
     "include": [
-        "src/**/*"
-    ],
-    "exclude": [
-        "node_modules",
-        "**/*.spec.ts"
+        "src/**/*.ts"
     ]
 }
