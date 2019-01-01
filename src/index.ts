@@ -2,8 +2,9 @@ import * as mongoose from 'mongoose';
 import * as path from 'path';
 import Config from './Config';
 import * as CommandClient from 'djs-cc';
+import { registerListeners} from './userListeners';
 
-const commandsPath = path.join(__dirname, 'lib', 'commands');
+const commandsPath = path.join(__dirname, 'commands');
 
 const client = new CommandClient.Client();
 client
@@ -26,10 +27,10 @@ client
         console.warn('Reconnecting...');
     });
 
-require('./lib/userListeners')(client);
+registerListeners(client);
 
 client.registerCommandDirectory(path.join(commandsPath, 'search'))
-client.registerCommandDirectory(path.join(commandsPath, 'admin'))
+// client.registerCommandDirectory(path.join(commandsPath, 'admin'))
 client.registerCommandDirectory(path.join(commandsPath, 'fun'))
 
 client.login(Config.discordToken);

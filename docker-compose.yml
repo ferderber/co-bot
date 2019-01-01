@@ -1,5 +1,18 @@
 version: '3'
 services:
+  cobot:
+    build: .
+    volumes:
+      - ./dist:/cobot/dist
+    working_dir: /app
+    ports:
+      - 3000:3000
+    links:
+      - postgres
+    depends_on:
+      - postgres
+    environment:
+      NODE_ENV: development
   postgres:
     image: postgres:11.1
     ports:

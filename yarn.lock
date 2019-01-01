@@ -686,10 +686,10 @@ discord.js@discordjs/discord.js#master:
     tweetnacl "^1.0.0"
     ws "^6.0.0"
 
-djs-cc@^0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/djs-cc/-/djs-cc-0.7.1.tgz#fe10b051f99b122b28f2c1d7263318cf8e799f78"
-  integrity sha512-bHrV+3MHkT/byaIMSLL50q6syZ6YguwoPTTvsBYt3jwOLPcMkm7K5PUBPG+fwEow0ien/Dh+PjsWlfP3XkJRCQ==
+djs-cc@^0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/djs-cc/-/djs-cc-0.7.2.tgz#ced58dc56b63b57901ebf780ff096aa19a4ac131"
+  integrity sha512-i2I3vqxEuY8ZPXPWDV1O1p6kFS/dLK/ara79cZPFU7ocDDwMpTyxY9WhRRFBeu0NYom4Voyaw9nj89IkSpZQKg==
   dependencies:
     discord.js discordjs/discord.js#master
     reflect-metadata "^0.1.12"
@@ -3000,7 +3000,7 @@ typeorm@^0.2.7, typeorm@^0.2.9:
     yargonaut "^1.1.2"
     yargs "^11.1.0"
 
-typescript@3.2.2:
+typescript@^3.2.2:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.2.2.tgz#fe8101c46aa123f8353523ebdcf5730c2ae493e5"
   integrity sha512-VCj5UiSyHBjwfYacmDuc/NOk4QQixbE+Wn7MFJuS0nRuPQbof132Pw4u53dm264O8LPc2MVsc7RJNml5szurkg==

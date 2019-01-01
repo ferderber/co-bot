@@ -24,7 +24,7 @@
   "homepage": "https://github.com/matthewferderber/co-bot#readme",
   "dependencies": {
     "bufferutil": "^4.0.0",
-    "djs-cc": "^0.7.1",
+    "djs-cc": "^0.7.2",
     "erlpack": "github:discordapp/erlpack",
     "leaguejs": "^1.5.7",
     "mongoose": "^4.12.4",
@@ -45,7 +45,7 @@
     "@types/node": "^10.12.18",
     "@types/uuid": "^3.4.4",
     "nodemon": "^1.18.4",
-    "typescript": "3.2.2"
+    "typescript": "^3.2.2"
   },
   "eslintConfig": {
     "parserOptions": {
