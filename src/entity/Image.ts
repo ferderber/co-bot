@@ -1,11 +1,11 @@
-import { Column, Entity, Index, ManyToOne, PrimaryColumn, Generated } from "typeorm";
+import { Column, Entity, Generated, Index, ManyToOne, PrimaryColumn } from "typeorm";
 import {User} from './User';
 
 @Entity()
 export class Image {
 
     @PrimaryColumn()
-    public id: string
+    public id: string;
 
     @PrimaryColumn()
     public key: string;
@@ -34,6 +34,6 @@ export class Image {
           Uploaded by: ${this.user.username}
           Display Count: ${this.displayCount}
           Filename: ${this.filename}
-          Date Uploaded: ${this.dateUploaded}`
+          Date Uploaded: ${this.dateUploaded}`;
     }
 }

@@ -1,142 +1,142 @@
 import * as mongoose from 'mongoose';
 import 'reflect-metadata';
-import { getManager, createConnection, Connection } from 'typeorm';
-import { User } from "./entity/User";
-import { Sound } from "./entity/Sound";
-import { Image } from "./entity/Image";
-import { Vote } from "./entity/Vote";
+import { Connection, createConnection, getManager } from 'typeorm';
 import Config from './Config';
+import { Image } from "./entity/Image";
+import { Sound } from "./entity/Sound";
+import { User } from "./entity/User";
+import { Vote } from "./entity/Vote";
 
-(<any>mongoose.Promise) = global.Promise;
+(mongoose.Promise as any) = global.Promise;
 
 interface IImageSchema {
-    key: string,
-    filename: string,
-    user: string,
-    playCount: number,
-    date: Date
+    key: string;
+    filename: string;
+    user: string;
+    playCount: number;
+    date: Date;
 }
 
 interface ISoundSchema {
-    key: string,
-    filename: string,
-    user: string,
-    playCount: number,
-    date: Date,
-    points: number,
-    duration: number
+    key: string;
+    filename: string;
+    user: string;
+    playCount: number;
+    date: Date;
+    points: number;
+    duration: number;
 }
 
 interface IVoteSchema {
-    user: string,
-    sound: string,
-    rating: number
+    user: string;
+    sound: string;
+    rating: number;
 }
 
 interface IUserSchema {
-    _id: any,
-    username: string,
-    avatar: string,
-    joinDate: Date,
-    level: number,
-    xp: number,
-    soundPlays: number,
+    _id: any;
+    username: string;
+    avatar: string;
+    joinDate: Date;
+    level: number;
+    xp: number;
+    soundPlays: number;
 }
 
 const imageSchema = new mongoose.Schema({
-    key: {
-        type: String,
+    date: {
         required: true,
-        unique: true
+        type: Date,
     },
     filename: {
+        required: true,
         type: String,
-        required: true
     },
-    user: {
+    key: {
+        required: true,
         type: String,
-        ref: 'User',
+        unique: true,
     },
     playCount: {
+        default: 0,
         type: Number,
-        default: 0
     },
-    date: {
-        type: Date,
-        required: true
-    }
+    user: {
+        ref: 'User',
+        type: String,
+    },
 });
 const soundSchema = new mongoose.Schema({
-    key: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    filename: {
-        type: String,
-        required: true
-    },
-    user: {
-        type: String,
-        ref: 'User',
-    },
-    playCount: {
-        type: Number,
-        default: 0
-    },
     date: {
+        required: true,
         type: Date,
-        required: true
-    },
-    points: {
-        type: Number,
-        default: 0
     },
     duration: {
+        default: 0,
         type: Number,
-        default: 0
-    }
+    },
+    filename: {
+        required: true,
+        type: String,
+    },
+    key: {
+        required: true,
+        type: String,
+        unique: true,
+    },
+    playCount: {
+        default: 0,
+        type: Number,
+    },
+    points: {
+        default: 0,
+        type: Number,
+    },
+    user: {
+        ref: 'User',
+        type: String,
+    },
 });
 
 const userSchema = new mongoose.Schema({
     _id: {
+        required: true,
         type: String,
-        required: true
-    },
-    username: {
-        type: String
     },
     avatar: {
-        type: String
+        type: String,
     },
     joinDate: {
+        default: new Date(),
         type: Date,
-        default: new Date()
     },
     level: {
+        default: 1,
         type: Number,
-        default: 1
-    },
-    xp: {
-        type: Number,
-        default: 0
     },
     soundPlays: {
+        default: 0,
         type: Number,
-        default: 0
-    }
+    },
+    username: {
+        type: String,
+    },
+    xp: {
+        default: 0,
+        type: Number,
+    },
 });
 
 const voteSchema = new mongoose.Schema({
-    user: {
-        type: Number,
-        ref: 'User'
-    },
+    rating: Number,
     sound: {
+        ref: 'Sound',
         type: Number,
-        ref: 'Sound'
     },
-    rating: Number
+    user: {
+        ref: 'User',
+        type: Number,
+    },
 });
 interface IUserModel extends IUserSchema, mongoose.Document {}
 interface ISoundModel extends ISoundSchema, mongoose.Document {}
@@ -149,48 +149,48 @@ const VoteModel = mongoose.model<IVoteModel>('votes', voteSchema);
 
 function soundModelToEntity(sound: ISoundSchema): Sound {
     return new Sound({
-        id: sound.filename.substring(0, sound.filename.lastIndexOf('.')),
-        key: sound.key,
-        filename: sound.filename,
-        playCount: sound.playCount,
-        points: sound.points,
         dateUploaded: sound.date,
         duration: sound.duration,
+        fileType: sound.filename.substring(sound.filename.lastIndexOf('.')),
+        filename: sound.filename,
+        id: sound.filename.substring(0, sound.filename.lastIndexOf('.')),
+        key: sound.key,
+        playCount: sound.playCount,
+        points: sound.points,
         user: new User({id: sound.user}),
-        fileType: sound.filename.substring(sound.filename.lastIndexOf('.'))
     });
 }
 
 function imageModelToEntity(image: IImageSchema): Image {
     return new Image({
+        dateUploaded: image.date,
+        displayCount: image.playCount,
+        fileType: image.filename.substring(image.filename.lastIndexOf('.')),
+        filename: image.filename,
         id: image.filename.substring(0, image.filename.lastIndexOf('.')),
         key: image.key,
-        filename: image.filename,
-        displayCount: image.playCount,
-        dateUploaded: image.date,
         user: new User({id: image.user}),
-        fileType: image.filename.substring(image.filename.lastIndexOf('.'))
-    })
+    });
 }
 
 function userModelToEntity(user: IUserSchema): User {
     return new User({
-        id: user._id,
-        username: user.username,
         avatar: user.avatar,
+        id: user._id,
         joinDate: user.joinDate,
-        xp: user.xp,
         level: user.level,
-        soundPlays: user.soundPlays
-    })
+        soundPlays: user.soundPlays,
+        username: user.username,
+        xp: user.xp,
+    });
 }
 
 function voteModelToEntity(vote: IVoteSchema): Vote {
     return new Vote({
         rating: vote.rating,
         sound: new Sound({id: vote.sound}),
-        user: new User({id: vote.user})
-    })
+        user: new User({id: vote.user}),
+    });
 }
 
 async function getUsers(): Promise<User[]> {
@@ -227,7 +227,7 @@ async function convertDatabase(con: Connection) {
         await manager.save(Sound, sounds);
         await manager.save(Vote, votes);
         await manager.save(Image, images);
-    } catch(e) {
+    } catch (e) {
         console.error(e);
     }
 }
@@ -237,4 +237,3 @@ createConnection().then(async (con) => {
     await convertDatabase(con);
     const manager = con.createEntityManager();
 }).catch((error) => console.log(error));
-

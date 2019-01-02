@@ -1,50 +1,50 @@
-import { Command, Argument, ArgumentType, Message } from 'djs-cc';
+import { Argument, ArgumentType, Command, Message } from 'djs-cc';
 
-import {Sound} from '../../entity/Sound';
 import { User } from "entity/User";
 import { getManager } from "typeorm";
+import {Sound} from '../../entity/Sound';
 import * as FileManager from '../../FileManager';
 
-module.exports = class SoundCommand extends Command {
+export class SoundCommand extends Command {
     constructor() {
         super({
-            name: 'sound',
             aliases: ['s'],
-            description: 'Manages sounds',
-            usage: 'sound add soundname',
             args: [new Argument({
                 name: 'operation',
-                type: ArgumentType.String,
                 required: true,
+                type: ArgumentType.String,
             }), new Argument({
                 name: 'sound',
+                required: true,
                 type: ArgumentType.String,
-                required: true
-            })]
+            })],
+            description: 'Manages sounds',
+            name: 'sound',
+            usage: 'sound add soundname',
         });
     }
-    async run(msg: Message, args: Map<string, any>) {
+    public async run(msg: Message, args: Map<string, any>) {
         const manager = getManager();
         if (args.get('operation') === 'add') {
-            let attachment = msg.attachments.first();
+            const attachment = msg.attachments.first();
             if (attachment) {
-                var fileType = attachment.name.substring(attachment.name.lastIndexOf('.'));
+                const fileType = attachment.name.substring(attachment.name.lastIndexOf('.'));
                 await FileManager.download(attachment.url, attachment.id + fileType);
                 const metadata = await FileManager.getMetadata(attachment.id + fileType);
-                var sound = new Sound({
-                    key: args.get('sound'),
-                    fileType: fileType,
+                let sound = new Sound({
+                    dateUploaded: new Date(),
+                    duration: metadata.format.duration,
+                    fileType,
                     filename: attachment.id + fileType,
                     id: attachment.id,
+                    key: args.get('sound'),
                     user: new User({id: msg.author.id}),
-                    dateUploaded: new Date(),
-                    duration: metadata.format.duration
                 });
                 try {
                     sound = await manager.save(sound);
                     msg.reply("Sound added");
                 } catch (e) {
-                    if (e.code == 11000) {
+                    if (e.code === 11000) {
                         FileManager.remove(sound.filename);
                         msg.reply("Sound already exists");
                     } else {
@@ -56,10 +56,10 @@ module.exports = class SoundCommand extends Command {
                 msg.reply("This command must be used in the comment of an attachment.");
             }
         } else if (args.get('operation') === 'remove') {
-            let sound = await manager.createQueryBuilder(Sound, 'u')
+            const sound = await manager.createQueryBuilder(Sound, 'u')
                 .where("key ILIKE :key", { key: args.get('sound')})
                 .getOne();
-                manager.remove(sound);
+            manager.remove(sound);
             if (sound) {
                 await FileManager.remove(sound.filename);
                 console.log(`Sound ${sound.key} removed by: ${msg.author.username}`);

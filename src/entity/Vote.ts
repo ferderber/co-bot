@@ -1,6 +1,6 @@
 import { Column, Entity, Index, ManyToOne, PrimaryColumn } from "typeorm";
-import {User} from './User';
 import {Sound} from "./Sound";
+import {User} from './User';
 
 @Entity()
 // @Index(["user", "sound"], { unique: true })
@@ -13,13 +13,13 @@ export class Vote {
     public sound: Sound;
 
     @Column()
-    public rating: number
+    public rating: number;
 
     constructor(v: Partial<Vote>) {
         Object.assign(this, v);
     }
 
     public toString(): string {
-        return `${this.user.username} Rated ${this.sound.key} ${ this.rating > 0 ? '+' : '-'}${this.rating}`
+        return `${this.user.username} Rated ${this.sound.key} ${ this.rating > 0 ? '+' : '-'}${this.rating}`;
     }
 }

@@ -1,4 +1,4 @@
-import { Column, Entity, Index, ManyToOne, PrimaryColumn, Generated } from "typeorm";
+import { Column, Entity, Generated, Index, ManyToOne, PrimaryColumn } from "typeorm";
 import {User} from './User';
 
 @Entity()
@@ -36,11 +36,11 @@ export class Sound {
     }
 
     public toString(): string {
-        return `${this.key}: 
+        return `${this.key}:
           Uploaded by: ${this.user.username}
           Duration: ${this.duration}
           Filename: ${this.filename}
           Play Count: ${this.playCount}
-          Date Uploaded: ${this.dateUploaded}`
+          Date Uploaded: ${this.dateUploaded}`;
     }
 }

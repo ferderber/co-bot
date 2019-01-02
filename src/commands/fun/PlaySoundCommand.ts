@@ -1,36 +1,36 @@
+import { GuildMember, VoiceChannel, VoiceConnection } from 'discord.js';
+import { Argument, ArgumentType, Client, Command, Message } from 'djs-cc';
+import * as os from 'os';
+import * as path from 'path';
+import { getManager } from 'typeorm';
+import * as ytdl from 'ytdl-core';
 import { Sound } from '../../entity/Sound';
 import { User } from '../../entity/User';
-import * as path from 'path';
-import * as os from 'os';
-import * as ytdl from 'ytdl-core';
-import { Command, Argument, ArgumentType, Client, Message } from 'djs-cc';
-import { VoiceChannel, VoiceConnection, GuildMember } from 'discord.js';
-import { getManager } from 'typeorm';
 
 module.exports = class PlaySoundCommand extends Command {
     constructor() {
         super({
-            name: 'play-sound',
             aliases: ['play', 'p'],
-            description: 'Plays a sound',
-            usage: 'play soundname',
             args: [new Argument({
                 name: 'sound',
+                required: false,
                 type: ArgumentType.String,
-                required: false
             }), new Argument({
                 name: 'time',
+                required: false,
                 type: ArgumentType.Integer,
-                required: false
-            })]
+            })],
+            description: 'Plays a sound',
+            name: 'play-sound',
+            usage: 'play soundname',
         });
     }
-    async run(msg: Message, args: Map<string, any>) {
+    public async run(msg: Message, args: Map<string, any>) {
         const manager = getManager();
-        let bot = msg.client;
-        let voiceChannel = msg.member.voice.channel;
+        const bot = msg.client;
+        const voiceChannel = msg.member.voice.channel;
         const streamOptions = {
-            volume: .5
+            volume: 0.5,
         };
         if (voiceChannel) {
             if (args.get('sound') === undefined) {
@@ -39,19 +39,19 @@ module.exports = class PlaySoundCommand extends Command {
                     .limit(1)
                     .getOne();
                 if (sound) {
-                    let con = await this.connectToVoiceChannel(bot, voiceChannel);
+                    const con = await this.connectToVoiceChannel(bot, voiceChannel);
                     if (con) {
                         return this.playSound(sound, msg.member, con);
                     }
                 }
-            } 
-            else if (/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/.test(args.get('sound'))) {
-                let con = await this.connectToVoiceChannel(bot, voiceChannel);
+            } else if (/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/
+                .test(args.get('sound'))) {
+                const con = await this.connectToVoiceChannel(bot, voiceChannel);
                 if (con) {
                     try {
                         con.play(ytdl(args.get('sound'), {
+                            begin: args.get('time') ? args.get('time') : 0 + 's',
                             filter: 'audioonly',
-                            begin: args.get('time') ? args.get('time') : 0 + 's'
                         }), streamOptions);
                     } catch (err) {
                         console.error(err);
@@ -62,7 +62,7 @@ module.exports = class PlaySoundCommand extends Command {
                     .where("key ILIKE :key", { key: args.get('sound')})
                     .execute();
                 if (sound) {
-                    let con = await this.connectToVoiceChannel(bot, voiceChannel);
+                    const con = await this.connectToVoiceChannel(bot, voiceChannel);
                     if (con) {
                         this.playSound(sound, msg.member, con);
                     }
@@ -75,14 +75,13 @@ module.exports = class PlaySoundCommand extends Command {
         }
     }
 
-    async connectToVoiceChannel(bot: Client, voiceChannel: VoiceChannel) {
-        const existingConnection = bot.voiceConnections.find(con => con.channel.id === voiceChannel.id);
-        if (existingConnection === null || existingConnection === undefined || existingConnection.channel.id != voiceChannel.id) {
+    private async connectToVoiceChannel(bot: Client, voiceChannel: VoiceChannel) {
+        const existingConnection = bot.voiceConnections.find((con) => con.channel.id === voiceChannel.id);
+        if (existingConnection === null || existingConnection === undefined ||
+            existingConnection.channel.id !== voiceChannel.id) {
             const connections = bot.voiceConnections.array();
-            var disconnections = [];
-            for(let i = 0; i < connections.length; i++) {
-                disconnections.push(connections[i].disconnect());
-            }
+            const disconnections: void[] = [];
+            connections.forEach((connection) => disconnections.push(connection.disconnect()));
             await Promise.all(disconnections);
             return await voiceChannel.join();
         } else {
@@ -90,7 +89,7 @@ module.exports = class PlaySoundCommand extends Command {
         }
     }
 
-    async playSound(sound: Sound, user: GuildMember, con: VoiceConnection) {
+    private async playSound(sound: Sound, user: GuildMember, con: VoiceConnection) {
         this.incrementSoundsPlayCount(sound);
         this.incrementUsersPlayCount(user);
         try {
@@ -100,7 +99,7 @@ module.exports = class PlaySoundCommand extends Command {
         }
     }
 
-    async incrementSoundsPlayCount(sound: Sound) {
+    private async incrementSoundsPlayCount(sound: Sound) {
         const manager = getManager();
         sound.playCount++;
         try {
@@ -109,7 +108,7 @@ module.exports = class PlaySoundCommand extends Command {
             console.error(err);
         }
     }
-    async incrementUsersPlayCount(member: GuildMember) {
+    private async incrementUsersPlayCount(member: GuildMember) {
         const manager = getManager();
         const user = await manager.findOne(User, member.id);
         user.soundPlays++;
@@ -119,4 +118,4 @@ module.exports = class PlaySoundCommand extends Command {
             console.error(err);
         }
     }
-}
+};

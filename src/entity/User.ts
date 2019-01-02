@@ -1,4 +1,4 @@
-import { Column, Entity, Index, ManyToOne, PrimaryColumn, OneToMany } from "typeorm";
+import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
 import {Image} from "./Image";
 import {Sound} from "./Sound";
 import {Vote} from "./Vote";
@@ -22,7 +22,7 @@ export class User {
     public xp: number;
 
     @Column({default: new Date()})
-    public joinDate: Date
+    public joinDate: Date;
 
     @Column({default: 0})
     public soundPlays: number;

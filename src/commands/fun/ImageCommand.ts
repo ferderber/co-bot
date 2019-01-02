@@ -1,41 +1,40 @@
-import { Image } from '../../entity/Image';
-import { User } from '../../entity/User';
 import { MessageAttachment } from 'discord.js';
-import * as FileManager from '../../FileManager.js';
-import { Command, Argument, ArgumentType, Message } from 'djs-cc';
+import { Argument, ArgumentType, Command, Message } from 'djs-cc';
 import { getManager } from 'typeorm';
 import { v4 } from 'uuid';
+import { Image } from '../../entity/Image';
+import { User } from '../../entity/User';
+import * as FileManager from '../../FileManager.js';
 
 export class ImageCommand extends Command {
     constructor() {
         super({
-            name: 'image',
             aliases: ['i'],
-            description: 'Displays an image',
-            usage: 'image imageName',
             args: [
                 new Argument({
                     name: 'operationOrImageName',
+                    required: false,
                     type: ArgumentType.String,
-                    required: false
                 }),
                 new Argument({
                     name: 'imageName',
+                    required: false,
                     type: ArgumentType.String,
-                    required: false
                 }),
                 new Argument({
                     name: 'imageUrl',
+                    required: false,
                     type: ArgumentType.String,
-                    required: false
-                })
-            ]
+                })],
+            description: 'Displays an image',
+            name: 'image',
+            usage: 'image imageName',
         });
     }
-    async run(msg: Message, args: Map<string, any>) {
-        let operationOrImage = args.get('operationOrImageName');
-        let imageName = args.get('imageName');
-        let imageUrl = args.get('imageUrl');
+    public async run(msg: Message, args: Map<string, any>) {
+        const operationOrImage = args.get('operationOrImageName');
+        const imageName = args.get('imageName');
+        const imageUrl = args.get('imageUrl');
 
         if (operationOrImage || imageUrl || msg.attachments) {
             switch (operationOrImage) {
@@ -55,10 +54,10 @@ export class ImageCommand extends Command {
             msg.reply('Provide a url or attach an image');
         }
     }
-    async add(msg: Message, imageName: string, imageUrl: string) {
+    private async add(msg: Message, imageName: string, imageUrl: string) {
         const manager = getManager();
-        var url: string;
-        var id;
+        let url: string;
+        let id;
         if (imageUrl) {
             url = imageUrl;
             id = v4();
@@ -66,25 +65,25 @@ export class ImageCommand extends Command {
             url = msg.attachments.first().url;
             id = msg.attachments.first().id;
         }
-        var fileType = url.substring(url.lastIndexOf('.'));
-        var img = new Image({
-            id: id,
-            key: imageName,
+        const fileType = url.substring(url.lastIndexOf('.'));
+        let img = new Image({
+            dateUploaded: new Date(),
+            fileType,
             filename: id + fileType,
-            fileType: fileType,
+            id,
+            key: imageName,
             user: new User({ id: msg.author.id}),
-            dateUploaded: new Date()
         });
         img = await manager.save(img);
-        await FileManager.download(url, img.filename)
+        await FileManager.download(url, img.filename);
         msg.reply("Image added");
     }
 
-    async remove(msg: Message, imageName: string) {
+    private async remove(msg: Message, imageName: string) {
         const manager = getManager();
         const image = await manager.createQueryBuilder(Image, 'u')
             .where("key ILIKE :key", { key: imageName.toLowerCase()})
-            .getOne()
+            .getOne();
         manager.remove(image);
         if (image) {
             await FileManager.remove(image.filename);
@@ -95,14 +94,15 @@ export class ImageCommand extends Command {
         }
     }
 
-    async display(msg: Message, imageName: string) {
+    private async display(msg: Message, imageName: string) {
         const manager = getManager();
         const image = await manager.createQueryBuilder(Image, 'u')
             .where("key ILIKE :key", { key: imageName.toLowerCase()})
-            .getOne()
+            .getOne();
         if (image) {
             msg.delete();
-            msg.channel.send(`Image requested by: ${msg.author}`, new MessageAttachment(FileManager.getPath(image.filename)));
+            msg.channel.send(`Image requested by: ${msg.author}`,
+                new MessageAttachment(FileManager.getPath(image.filename)));
         } else {
             msg.reply('Image not found');
         }

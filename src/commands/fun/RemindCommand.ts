@@ -1,32 +1,32 @@
-import { Command, Argument, ArgumentType, Message } from 'djs-cc';
+import { Argument, ArgumentType, Command, Message } from 'djs-cc';
 
 export class RemindCommand extends Command {
     constructor() {
         super({
-            name: 'remind',
-            description: 'Sends a reminder message to a user after the specified amount of time',
-            usage: 'remind @Cobalt#7239 60 It\'s been 60 seconds',
             args: [
                 new Argument({
                     name: 'user',
+                    required: true,
                     type: ArgumentType.User,
-                    required: true
                 }),
                 new Argument({
                     name: 'time',
+                    required: true,
                     type: ArgumentType.Integer,
-                    required: true
                 }),
                 new Argument({
                     name: 'message',
+                    required: true,
                     type: ArgumentType.String,
-                    required: true
-                })
-            ]
+                })],
+            description: 'Sends a reminder message to a user after the specified amount of time',
+            name: 'remind',
+            usage: 'remind @Cobalt#7239 60 It\'s been 60 seconds',
         });
     }
-    async run(msg: Message, args: Map<string, any>) {
+    public async run(msg: Message, args: Map<string, any>) {
         await msg.reply(':ok_hand: ' + args.get('time') + ' seconds');
-        await setTimeout(() => msg.channel.send(args.get('user') + ': ' + args.get('message')), args.get('time') * 1000);
+        await setTimeout(() =>
+            msg.channel.send(args.get('user') + ': ' + args.get('message')), args.get('time') * 1000);
     }
 }

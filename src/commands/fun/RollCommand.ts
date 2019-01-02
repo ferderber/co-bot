@@ -1,39 +1,40 @@
-import { Command, Argument, ArgumentType, Message } from 'djs-cc';
+import { MessageEmbed } from 'discord.js';
+import { Argument, ArgumentType, Command, Message } from 'djs-cc';
 
 export class RollCommand extends Command {
     constructor() {
         super({
-            name: 'roll',
             aliases: ['r'],
-            description: 'Rolls a dice type, or between supplied values.',
-            usage: 'roll d6 | !roll 1 6',
             args: [
                 new Argument({
                     name: 'rangeStartOrDice',
+                    required: false,
                     type: ArgumentType.String,
-                    required: false
                 }),
                 new Argument({
                     name: 'rangeEnd',
+                    required: false,
                     type: ArgumentType.String,
-                    required: false
-                })
-            ]
+                }),
+            ],
+            description: 'Rolls a dice type, or between supplied values.',
+            name: 'roll',
+            usage: 'roll d6 | !roll 1 6',
         });
     }
-    async run(msg: Message, args: Map<string, any>) {
+    public async run(msg: Message, args: Map<string, any>) {
         let roll = 0;
         let rollType = 'none';
         let iconUrl = 'https://i.imgur.com/aw0Oa4p.png';
-        let rangeStartOrDice = args.get('rangeStartOrDice') || '';
-        let rangeEnd = args.get('rangeEnd');
-        let startInt = parseInt(rangeStartOrDice);
-        let endInt = parseInt(rangeEnd);
-         
+        const rangeStartOrDice = args.get('rangeStartOrDice') || '';
+        const rangeEnd = args.get('rangeEnd');
+        const startInt = parseInt(rangeStartOrDice, 10);
+        const endInt = parseInt(rangeEnd, 10);
+
         // check if first arg matches a 'd6' style pattern
-        let diceMatch = rangeStartOrDice.match(/d\d+/i);
+        const diceMatch = rangeStartOrDice.match(/d\d+/i);
         if (rangeStartOrDice && diceMatch && !rangeEnd) {
-            let diceValue = parseInt(diceMatch[0].slice(1));
+            const diceValue = parseInt(diceMatch[0].slice(1), 10);
             roll = Math.floor(Math.random() * diceValue + 1);
             rollType = `D${diceValue} Roll`;
 
@@ -41,23 +42,21 @@ export class RollCommand extends Command {
             // if supplied two valid numbers, roll between the supplied ranges
             roll = Math.floor(Math.random() * (endInt - startInt) + startInt);
             rollType = `${startInt}-${endInt} Roll`;
-        
+
         } else {
             // no args or incorrect args yields a 4chan-esque 6-digit message ID roll
-            roll = parseInt(msg.id.slice(-6));
+            roll = parseInt(msg.id.slice(-6), 10);
             rollType = 'Message ID Roll';
             iconUrl = 'https://i.imgur.com/DYxXcYY.png';
         }
-
-        msg.channel.send({
-            "embed": {
-                "color": 1144643,
-                "description": `${msg.author}'s roll: **${roll}**`,
-                "author": {
-                    "name": rollType,
-                    "icon_url": iconUrl
-                }
-            }
+        const embed = new MessageEmbed({
+            author: {
+                icon_url: iconUrl,
+                name: rollType,
+            },
+            color: 1144643,
+            description: `${msg.author}'s roll: **${roll}**`,
         });
+        msg.channel.send(embed);
     }
 }

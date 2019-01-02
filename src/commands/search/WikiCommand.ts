@@ -1,46 +1,45 @@
-import {MessageEmbed, Message} from 'discord.js';
+import {Message, MessageEmbed} from 'discord.js';
+import { Argument, ArgumentType, Command } from 'djs-cc';
 import WikiJS from 'wikijs';
-import { Command, Argument, ArgumentType } from 'djs-cc';
 
 export class WikiCommand extends Command {
     constructor() {
         super({
-            name: 'wikipedia',
             aliases: ['wiki', 'w'],
-            description: 'Looks up information from Wikipedia',
-            usage: 'wiki Canada',
             args: [new Argument({
                 name: 'search',
+                required: true,
                 type: ArgumentType.String,
-                required: true
-            })]
+            })],
+            description: 'Looks up information from Wikipedia',
+            name: 'wikipedia',
+            usage: 'wiki Canada',
         });
     }
-    public async run(msg: Message, args: Map<string, any>) : Promise<any> {
-        let arg = args.get('search').replace(' ', '_');
+    public async run(msg: Message, args: Map<string, any>): Promise<any> {
+        const arg = args.get('search').replace(' ', '_');
         const Wiki = WikiJS();
         const data = await Wiki.search(arg, 1);
         const page = await Wiki.page(data.results[0]);
 
-        var summary = await page.summary();
-        var image = await page.mainImage();
-        var info: any = await page.info();
-        console.log(info);
+        const summary = await page.summary();
+        const image = await page.mainImage();
+        const info: any = await page.info();
         return Promise.all([summary, image, info]).then((arr) => {
-            console.log(arr);
-            var richEmbed = new MessageEmbed({
+            const richEmbed = new MessageEmbed({
                 color: 555,
                 description: summary.split('\n').slice(0, 1).join('\n'),
                 title: info.title,
-                url: info.fullurl
+                url: info.fullurl,
             });
-            if (image)
+            if (image) {
                 richEmbed.setImage(image);
+            }
             msg.channel.send({
-                embed: richEmbed
+                embed: richEmbed,
             });
 
-        }).catch(err => {
+        }).catch(() => {
             return;
         });
     }
