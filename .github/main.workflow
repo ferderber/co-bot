@@ -1,6 +1,6 @@
 workflow "Build, Tag, Publish" {
   on = "push"
-  resolves = ["Build"]
+  resolves = ["Push Image"]
 }
 
 action "Build" {
@@ -9,7 +9,7 @@ action "Build" {
 }
 
 action "Tag Image" {
-  needs [ "Build" ]
+  needs = [ "Build" ]
   uses = "actions/docker/tag@master"
   env = {
     IMAGE_NAME = "cobot"
@@ -18,13 +18,13 @@ action "Tag Image" {
 }
 
 action "Login To Docker" {
-  needs ["Build"]
+  needs = ["Build"]
   uses = "actions/docker/login@master"
   secrets = ["DOCKER_USERNAME", "DOCKER_PASSWORD"]
 }
 
 action "Push Image" {
-  needs ["Tag Image", "Login To Docker"]
+  needs = ["Tag Image", "Login To Docker"]
   uses = "actions/docker/push@master"
   args = "push"
 }
