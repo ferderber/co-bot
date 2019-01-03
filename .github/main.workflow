@@ -11,10 +11,7 @@ action "Build" {
 action "Tag Image" {
   needs = [ "Build" ]
   uses = "actions/docker/tag@master"
-  env = {
-    IMAGE_NAME = "cobot"
-  }
-  args = ["$IMAGE_NAME", "base"]
+  args = ["cobot", "matthewferderber/co-bot"]
 }
 
 action "Login to Docker" {
@@ -25,5 +22,5 @@ action "Login to Docker" {
 action "Push Image" {
   needs = ["Tag Image", "Login to Docker"]
   uses = "actions/docker/cli@master"
-  args = ["push", "base"]
+  args = ["push", "matthewferderber/co-bot"]
 }
