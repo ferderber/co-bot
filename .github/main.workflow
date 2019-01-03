@@ -17,14 +17,13 @@ action "Tag Image" {
   args = ["$IMAGE_NAME", "base"]
 }
 
-action "Login To Docker" {
-  needs = ["Build"]
+action "Login to Docker" {
   uses = "actions/docker/login@master"
   secrets = ["DOCKER_USERNAME", "DOCKER_PASSWORD"]
 }
 
 action "Push Image" {
-  needs = ["Tag Image", "Login To Docker"]
-  uses = "actions/docker/push@master"
-  args = "push"
+  needs = ["Tag Image", "Login to Docker"]
+  uses = "actions/docker/cli@master"
+  args = ["push", "base"]
 }
