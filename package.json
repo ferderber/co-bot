@@ -4,7 +4,7 @@
   "description": "Discord Bot for Cobaltium Server",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "typeorm migration:run && node dist/index.js",
     "db:convert": "node dist/MongoDBToPostgres.js",
     "build": "tsc",
     "lint": "tslint --project ."
