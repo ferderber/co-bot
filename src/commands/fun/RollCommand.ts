@@ -1,7 +1,7 @@
 import { MessageEmbed } from 'discord.js';
 import { Argument, ArgumentType, Command, Message } from 'djs-cc';
 
-export class RollCommand extends Command {
+export default class RollCommand extends Command {
     constructor() {
         super({
             aliases: ['r'],

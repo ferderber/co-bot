@@ -700,10 +700,10 @@ discord.js@discordjs/discord.js#master:
     tweetnacl "^1.0.0"
     ws "^6.0.0"
 
-djs-cc@^0.7.2:
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/djs-cc/-/djs-cc-0.7.2.tgz#ced58dc56b63b57901ebf780ff096aa19a4ac131"
-  integrity sha512-i2I3vqxEuY8ZPXPWDV1O1p6kFS/dLK/ara79cZPFU7ocDDwMpTyxY9WhRRFBeu0NYom4Voyaw9nj89IkSpZQKg==
+djs-cc@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/djs-cc/-/djs-cc-0.8.0.tgz#3f48c2bc80cef44b2072c3ea07efcdc6d73ccf25"
+  integrity sha512-pGrToyO0rV6RJ3ChOZ8SOTnxq7k2oJnaaJqRLA3WeGy4OQLR3nweJJ3mjHQqs/dXnwAViNEmMBrzUZ+8dUycTQ==
   dependencies:
     discord.js discordjs/discord.js#master
     reflect-metadata "^0.1.12"

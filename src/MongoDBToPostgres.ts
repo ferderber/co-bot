@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 import 'reflect-metadata';
 import { Connection, createConnection, getManager } from 'typeorm';
-import Config from './Config';
+import {Config} from './Config';
 import { Image } from "./entity/Image";
 import { Sound } from "./entity/Sound";
 import { User } from "./entity/User";

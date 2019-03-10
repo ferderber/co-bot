@@ -1,6 +1,6 @@
 import { Argument, ArgumentType, Command, Message } from 'djs-cc';
 
-export class CleanCommand extends Command {
+export default class CleanCommand extends Command {
     constructor() {
         super({
             aliases: ['clean', 'clear'],

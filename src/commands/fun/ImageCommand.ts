@@ -6,7 +6,7 @@ import { Image } from '../../entity/Image';
 import { User } from '../../entity/User';
 import * as FileManager from '../../FileManager.js';
 
-export class ImageCommand extends Command {
+export default class ImageCommand extends Command {
     constructor() {
         super({
             aliases: ['i'],

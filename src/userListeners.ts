@@ -1,6 +1,6 @@
 import { GuildMember, Role, VoiceChannel } from "discord.js";
 import {Client} from 'djs-cc';
-import { getManager } from "typeorm";
+import { getRepository } from "typeorm";
 import {User as UserEntity} from './entity/User';
 
 export function registerListeners(bot: Client): void {
@@ -30,11 +30,11 @@ export function registerListeners(bot: Client): void {
 }
 
 async function giveExperience(guildMember: GuildMember, xp: number): Promise<void> {
-    const manager = getManager();
-    let u = await manager.findOne(UserEntity, guildMember.id);
+    const repo = getRepository(UserEntity);
+    let u = await repo.findOne(guildMember.id);
     if (!u) {
         console.log("Adding user: " + guildMember.displayName);
-        u = new UserEntity({id: guildMember.id, username: guildMember.user.username});
+        u = new UserEntity({id: guildMember.id, username: guildMember.user.username, xp: 0, level: 1});
     }
     u.xp += xp;
     if (u.xp >= 100) {
@@ -52,5 +52,5 @@ async function giveExperience(guildMember: GuildMember, xp: number): Promise<voi
             member.roles.add(role);
         }
     }
-    await manager.save(u);
+    await repo.save(u);
 }

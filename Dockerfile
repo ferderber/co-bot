@@ -3,6 +3,7 @@ FROM node:alpine
 RUN mkdir -p /cobot
 
 ADD ./package.json ./yarn.* /tmp/
+
 ENV NODE_ENV=development
 RUN apk add --no-cache --virtual .gyp python make g++ \
     && cd /tmp \

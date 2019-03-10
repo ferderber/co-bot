@@ -1,9 +1,10 @@
 import {Message, MessageEmbed} from 'discord.js';
 import { Argument, ArgumentType, Command } from 'djs-cc';
 import {getManager} from 'typeorm';
+import {getRepository} from 'typeorm';
 import {User} from '../../entity/User';
 
-export class ProfileCommand extends Command {
+export default class ProfileCommand extends Command {
     constructor() {
         super({
             args: [new Argument({
@@ -17,8 +18,8 @@ export class ProfileCommand extends Command {
         });
     }
     public async run(msg: Message, args: Map<string, any>) {
-        const manager = getManager();
-        const user = await manager.findOne(User, args.get('user').id);
+        const repo = getRepository(User);
+        const user = await repo.findOne(args.get('user').id);
         if (user) {
             const guildMember = await (msg.guild.members.fetch(args.get('user').id));
             const embed = new MessageEmbed()

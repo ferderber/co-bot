@@ -7,7 +7,7 @@ import * as ytdl from 'ytdl-core';
 import { Sound } from '../../entity/Sound';
 import { User } from '../../entity/User';
 
-module.exports = class PlaySoundCommand extends Command {
+export default class PlaySoundCommand extends Command {
     constructor() {
         super({
             aliases: ['play', 'p'],

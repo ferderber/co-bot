@@ -1,6 +1,6 @@
 import { Argument, ArgumentType, Command, Message } from 'djs-cc';
 
-export class RemindCommand extends Command {
+export default class RemindCommand extends Command {
     constructor() {
         super({
             args: [

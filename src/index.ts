@@ -1,10 +1,13 @@
 import * as CommandClient from 'djs-cc';
 import * as mongoose from 'mongoose';
 import * as path from 'path';
-import Config from './Config';
+import { createConnection } from 'typeorm';
+import ImageCommand from './commands/fun/ImageCommand';
+import {Config, TypeORMConfig} from './Config';
 import { registerListeners} from './userListeners';
 
 const commandsPath = path.join(__dirname, 'commands');
+createConnection(TypeORMConfig).catch((err) => console.error);
 
 const client = new CommandClient.Client();
 client
@@ -31,7 +34,7 @@ client
 registerListeners(client);
 
 client.registerCommandDirectory(path.join(commandsPath, 'search'));
-// client.registerCommandDirectory(path.join(commandsPath, 'admin'));
+client.registerCommandDirectory(path.join(commandsPath, 'admin'));
 client.registerCommandDirectory(path.join(commandsPath, 'fun'));
 
 client.login(Config.discordToken);

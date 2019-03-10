@@ -1,19 +1,26 @@
-class Config {
-    public readonly env: string;
-    public readonly db: string;
-    public readonly redis: string;
-    public readonly discordToken: string;
-    public readonly ownerId: string;
-    public readonly leagueToken: string;
+import {PostgresConnectionOptions} from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
-    constructor() {
-        this.env = process.env.NODE_ENV;
-        this.db = (process.env.MONGO_URL || 'mongodb://localhost') + '/plebBot';
-        this.discordToken = process.env.DISCORD_BOT_TOKEN;
-        this.ownerId = process.env.DISCORD_BOT_OWNER_ID || '';
-        this.leagueToken = process.env.LEAGUE_API_KEY;
-
-    }
+export class Config {
+    public static readonly env: string = process.env.NODE_ENV;
+    public static readonly db: string = (process.env.MONGO_URL || 'mongodb://localhost') + '/plebBot';
+    public static readonly redis: string;
+    public static readonly discordToken: string = process.env.DISCORD_BOT_TOKEN;
+    public static readonly ownerId: string = process.env.DISCORD_BOT_OWNER_ID || '';
+    public static readonly leagueToken: string = process.env.LEAGUE_API_KEY;
 }
 
-export default new Config();
+export const TypeORMConfig: PostgresConnectionOptions = {
+    type: "postgres",
+    host: "host.docker.internal",
+    port: 5432,
+    database: "cobot",
+    username: "web",
+    synchronize: true,
+    logging: true,
+    entities: [
+       "dist/entity/**/*.js",
+    ],
+    migrations: [
+       "dist/migration/**/*.js",
+    ],
+};

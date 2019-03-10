@@ -5,7 +5,7 @@ import safeEval from 'safe-eval';
 const NS_PER_SEC = 1e9;
 const MS_PER_NS = 1e-6;
 
-module.exports = class EvalCommand extends Command {
+export default class EvalCommand extends Command {
     constructor() {
         super({
             aliases: ['eval'],

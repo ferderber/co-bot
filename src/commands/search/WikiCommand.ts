@@ -2,7 +2,7 @@ import {Message, MessageEmbed} from 'discord.js';
 import { Argument, ArgumentType, Command } from 'djs-cc';
 import WikiJS from 'wikijs';
 
-export class WikiCommand extends Command {
+export default class WikiCommand extends Command {
     constructor() {
         super({
             aliases: ['wiki', 'w'],
@@ -21,7 +21,6 @@ export class WikiCommand extends Command {
         const Wiki = WikiJS();
         const data = await Wiki.search(arg, 1);
         const page = await Wiki.page(data.results[0]);
-
         const summary = await page.summary();
         const image = await page.mainImage();
         const info: any = await page.info();
@@ -29,7 +28,7 @@ export class WikiCommand extends Command {
             const richEmbed = new MessageEmbed({
                 color: 555,
                 description: summary.split('\n').slice(0, 1).join('\n'),
-                title: info.title,
+                title: data.results[0],
                 url: info.fullurl,
             });
             if (image) {

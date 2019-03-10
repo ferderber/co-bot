@@ -4,7 +4,8 @@ services:
     build: .
     volumes:
       - ./dist:/cobot/dist
-    working_dir: /app
+      - ./src:/cobot/src
+    working_dir: /cobot
     ports:
       - 3000:3000
     links:
@@ -13,6 +14,7 @@ services:
       - postgres
     environment:
       NODE_ENV: development
+      DISCORD_BOT_TOKEN: $DISCORD_BOT_TOKEN
   postgres:
     image: postgres:11.1
     ports:

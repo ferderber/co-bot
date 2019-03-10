@@ -1,8 +1,8 @@
 import { Argument, ArgumentType, Command, Message } from 'djs-cc';
 import { LeagueJS } from 'leaguejs';
-import Config from '../../Config';
+import {Config} from '../../Config';
 
-module.exports = class LeagueLookupCommand extends Command {
+export default class LeagueLookupCommand extends Command {
     private api: LeagueJS;
     private champions: any[];
     constructor() {
@@ -115,5 +115,4 @@ module.exports = class LeagueLookupCommand extends Command {
     private getChampionName(id: number) {
         return this.champions[id].name;
     }
-
-};
+}

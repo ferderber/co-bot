@@ -30,7 +30,7 @@ export class User {
     @OneToMany(() => Image, (i) => i.user)
     public images: Image[];
 
-    @OneToMany(() => Sound, (s) => s.user)
+    @OneToMany(() => Sound, (s) => s.user, {eager: true})
     public sounds: Sound[];
 
     @OneToMany(() => Vote, (v) => v.user)

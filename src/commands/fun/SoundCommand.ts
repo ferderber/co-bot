@@ -1,11 +1,11 @@
 import { Argument, ArgumentType, Command, Message } from 'djs-cc';
 
-import { User } from "entity/User";
 import { getManager } from "typeorm";
 import {Sound} from '../../entity/Sound';
+import { User } from "../../entity/User";
 import * as FileManager from '../../FileManager';
 
-export class SoundCommand extends Command {
+export default class SoundCommand extends Command {
     constructor() {
         super({
             aliases: ['s'],
