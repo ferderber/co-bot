@@ -18,13 +18,15 @@ export default class LeagueLookupCommand extends Command {
             name: 'leaguelookup',
             usage: 'll username',
         });
-        this.api = new LeagueJS(Config.leagueToken, {
-            PLATFORM_ID: 'na1',
-        });
-        this.getChampions();
+        // this.api = new LeagueJS(Config.leagueToken, {
+        //     PLATFORM_ID: 'na1',
+        // });
+        // this.getChampions();
     }
 
     public async run(msg: Message, args: Map<string, any>) {
+        msg.reply("League lookup is currently disabled.");
+        return 0;
         const username = args.get('username').replace(' ', '');
         if (username) {
             const tempMsg = await msg.reply('Loading data...') as Message;
