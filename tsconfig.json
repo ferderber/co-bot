@@ -10,7 +10,7 @@
         "sourceMap": true,
         "types": ["node"],
         "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
+        "experimentalDecorators": true
     },
     "include": [
         "src/**/*.ts"

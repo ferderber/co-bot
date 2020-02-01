@@ -1,7 +1,7 @@
 import { GuildMember, Role, VoiceChannel } from "discord.js";
 import {Client} from 'djs-cc';
-import { getRepository } from "typeorm";
-import {User as UserEntity} from './entity/User';
+import { getManager } from "typeorm";
+import { User } from './entity/User';
 
 export function registerListeners(bot: Client): void {
     bot.on('message', (message) => {
@@ -13,10 +13,10 @@ export function registerListeners(bot: Client): void {
     });
 
     setInterval(() => {
-        bot.guilds.each((guild) => {
-            guild.channels.each((channel) => {
+        bot.guilds.forEach((guild) => {
+            guild.channels.forEach((channel) => {
                 if (channel.type === 'voice' && channel.id !== guild.afkChannelID) {
-                    (channel as VoiceChannel).members.each((member) => {
+                    (channel as VoiceChannel).members.forEach((member) => {
                         if (member.presence.status !== 'idle') {
                             console.log('Giving ' + member.user + ' 10 xp');
                             giveExperience(member, 10);
@@ -30,11 +30,11 @@ export function registerListeners(bot: Client): void {
 }
 
 async function giveExperience(guildMember: GuildMember, xp: number): Promise<void> {
-    const repo = getRepository(UserEntity);
-    let u = await repo.findOne(guildMember.id);
+    const manager = getManager();
+    let u = await manager.createQueryBuilder(User, 'u').where(guildMember.id).getOne();
     if (!u) {
         console.log("Adding user: " + guildMember.displayName);
-        u = new UserEntity({id: guildMember.id, username: guildMember.user.username, xp: 0, level: 1});
+        u = new User({id: guildMember.id, username: guildMember.user.username, xp: 0, level: 1});
     }
     u.xp += xp;
     if (u.xp >= 100) {
@@ -49,8 +49,8 @@ async function giveExperience(guildMember: GuildMember, xp: number): Promise<voi
             .find((r) => r.name === 'Elder');
         if (role && !member.roles.has(role.id)) {
             console.log(`Promoting ${guildMember.displayName} to Elder`);
-            member.roles.add(role);
+            member.addRole(role);
         }
     }
-    await repo.save(u);
+    await manager.save(u);
 }

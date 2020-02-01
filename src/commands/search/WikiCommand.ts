@@ -1,4 +1,4 @@
-import {Message, MessageEmbed} from 'discord.js';
+import {Message, RichEmbed} from 'discord.js';
 import { Argument, ArgumentType, Command } from 'djs-cc';
 import WikiJS from 'wikijs';
 
@@ -25,7 +25,7 @@ export default class WikiCommand extends Command {
         const image = await page.mainImage();
         const info: any = await page.info();
         return Promise.all([summary, image, info]).then((arr) => {
-            const richEmbed = new MessageEmbed({
+            const richEmbed = new RichEmbed({
                 color: 555,
                 description: summary.split('\n').slice(0, 1).join('\n'),
                 title: data.results[0],

@@ -11,7 +11,7 @@ export class Config {
 
 export const TypeORMConfig: PostgresConnectionOptions = {
     type: "postgres",
-    host: "host.docker.internal",
+    host: process.env.POSTGRES_HOST,
     port: 5432,
     database: "cobot",
     username: "web",
@@ -24,3 +24,5 @@ export const TypeORMConfig: PostgresConnectionOptions = {
        "dist/migration/**/*.js",
     ],
 };
+
+console.log(TypeORMConfig);

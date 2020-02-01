@@ -1,6 +1,5 @@
-import {Message, MessageEmbed} from 'discord.js';
+import {Message, RichEmbed} from 'discord.js';
 import { Argument, ArgumentType, Command } from 'djs-cc';
-import {getManager} from 'typeorm';
 import {getRepository} from 'typeorm';
 import {User} from '../../entity/User';
 
@@ -21,9 +20,9 @@ export default class ProfileCommand extends Command {
         const repo = getRepository(User);
         const user = await repo.findOne(args.get('user').id);
         if (user) {
-            const guildMember = await (msg.guild.members.fetch(args.get('user').id));
-            const embed = new MessageEmbed()
-                .setAuthor(guildMember.displayName, guildMember.user.displayAvatarURL())
+            const guildMember = await (msg.guild.fetchMember(args.get('user').id));
+            const embed = new RichEmbed()
+                .setAuthor(guildMember.displayName, guildMember.user.displayAvatarURL)
                 .setDescription(`**Cobaltium Discord Profile**`)
                 .addField('Level', `Level: ${user.level}\nXP: ${user.xp}`, true)
                 .addField('Statistics', `Sounds Played: ${user.soundPlays}\

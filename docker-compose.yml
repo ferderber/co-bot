@@ -2,21 +2,17 @@ version: '3'
 services:
   cobot:
     build: .
-    volumes:
-      - ./dist:/cobot/dist
-      - ./src:/cobot/src
     working_dir: /cobot
     ports:
       - 3000:3000
-    links:
-      - postgres
     depends_on:
-      - postgres
+      - postgres 
     environment:
-      NODE_ENV: development
-      DISCORD_BOT_TOKEN: $DISCORD_BOT_TOKEN
+      - POSTGRES_HOST=postgres
+      - NODE_ENV=development
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
   postgres:
-    image: postgres:11.1
+    image: postgres:11.6
     ports:
       - 5432:5432
     environment:

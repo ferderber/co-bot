@@ -1,4 +1,4 @@
-import { MessageEmbed } from 'discord.js';
+import { RichEmbed } from 'discord.js';
 import { Argument, ArgumentType, Command, Message } from 'djs-cc';
 
 export default class RollCommand extends Command {
@@ -49,7 +49,7 @@ export default class RollCommand extends Command {
             rollType = 'Message ID Roll';
             iconUrl = 'https://i.imgur.com/DYxXcYY.png';
         }
-        const embed = new MessageEmbed({
+        const embed = new RichEmbed({
             author: {
                 icon_url: iconUrl,
                 name: rollType,

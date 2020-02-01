@@ -1,3 +1,4 @@
+/* tslint:disable */
 import {MigrationInterface, QueryRunner} from "typeorm";
 
 export class Initial1547010440160 implements MigrationInterface {

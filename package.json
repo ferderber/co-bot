@@ -1,10 +1,10 @@
 {
   "name": "co-bot",
-  "version": "0.1.0",
+  "version": "0.8.3",
   "description": "Discord Bot for Cobaltium Server",
   "main": "index.js",
   "scripts": {
-    "start": "typeorm migration:run && node dist/index.js",
+    "start": "node dist/index.js",
     "db:convert": "node dist/MongoDBToPostgres.js",
     "build": "tsc",
     "lint": "tslint --project ."
@@ -24,13 +24,14 @@
   },
   "homepage": "https://github.com/matthewferderber/co-bot#readme",
   "dependencies": {
+    "@discordjs/opus": "^0.1.0",
     "bufferutil": "^4.0.0",
-    "djs-cc": "^0.8.0",
-    "erlpack": "github:discordapp/erlpack",
+    "djs-cc": "^0.8.3",
+    "erlpack": "discordapp/erlpack",
     "leaguejs": "^1.5.7",
+    "libsodium-wrappers": "^0.7.6",
     "mongoose": "^4.12.4",
     "music-metadata": "^3.3.2",
-    "node-opus": "^0.3.0",
     "pg": "^7.7.1",
     "reflect-metadata": "^0.1.12",
     "safe-eval": "^0.4.1",
