@@ -18,10 +18,10 @@ export const TypeORMConfig: PostgresConnectionOptions = {
     synchronize: true,
     logging: true,
     entities: [
-       "dist/entity/**/*.js",
+       __dirname + "/entity/**/*.ts",
     ],
     migrations: [
-       "dist/migration/**/*.js",
+       __dirname + "/migration/**/*.ts",
     ],
 };
 

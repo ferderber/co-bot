@@ -16,7 +16,7 @@ export class Sound {
     @Column()
     public fileType: string;
 
-    @Column('float')
+    @Column('float', { default: 0 })
     public duration: number;
 
     @Column({default: 0})

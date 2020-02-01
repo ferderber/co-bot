@@ -31,7 +31,7 @@ export function registerListeners(bot: Client): void {
 
 async function giveExperience(guildMember: GuildMember, xp: number): Promise<void> {
     const manager = getManager();
-    let u = await manager.createQueryBuilder(User, 'u').where(guildMember.id).getOne();
+    let u = await manager.createQueryBuilder(User, 'u').where("u.id = :id", {id: guildMember.id}).getOne();
     if (!u) {
         console.log("Adding user: " + guildMember.displayName);
         u = new User({id: guildMember.id, username: guildMember.user.username, xp: 0, level: 1});
