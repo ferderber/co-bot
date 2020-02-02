@@ -60,11 +60,11 @@ export default class PlaySoundCommand extends Command {
             } else {
                 const sound = await manager.createQueryBuilder(Sound, 's')
                     .where("s.key ILIKE :key", { key: args.get('sound')})
-                    .execute();
+                    .getOne();
                 if (sound) {
                     const con = await this.connectToVoiceChannel(bot, voiceChannel);
                     if (con) {
-                        this.playSound(sound, msg.member, con);
+                        return this.playSound(sound, msg.member, con);
                     }
                 } else {
                     msg.reply("Sound not found");
