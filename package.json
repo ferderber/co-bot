@@ -25,22 +25,22 @@
   "homepage": "https://github.com/matthewferderber/co-bot#readme",
   "dependencies": {
     "@discordjs/opus": "^0.1.0",
-    "bufferutil": "^4.0.0",
+    "bufferutil": "^4.0.1",
     "djs-cc": "^0.8.3",
     "erlpack": "discordapp/erlpack",
     "leaguejs": "^1.5.7",
     "libsodium-wrappers": "^0.7.6",
     "mongoose": "^4.12.4",
     "music-metadata": "^3.3.2",
-    "pg": "^7.7.1",
+    "pg": "^7.18.1",
     "reflect-metadata": "^0.1.12",
     "safe-eval": "^0.4.1",
     "typeorm": "^0.2.9",
     "uuid": "^3.3.2",
     "wikijs": "^4.10.2",
     "ws": "^6.1.0",
-    "ytdl-core": "^0.26.3",
-    "zlib-sync": "^0.1.4"
+    "ytdl-core": "^1.0.7",
+    "zlib-sync": "^0.1.6"
   },
   "devDependencies": {
     "@types/mongoose": "^5.3.5",

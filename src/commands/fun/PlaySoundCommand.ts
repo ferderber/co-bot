@@ -58,8 +58,8 @@ export default class PlaySoundCommand extends Command {
                     }
                 }
             } else {
-                const sound = await manager.createQueryBuilder(User, 'u')
-                    .where("key ILIKE :key", { key: args.get('sound')})
+                const sound = await manager.createQueryBuilder(Sound, 's')
+                    .where("s.key ILIKE :key", { key: args.get('sound')})
                     .execute();
                 if (sound) {
                     const con = await this.connectToVoiceChannel(bot, voiceChannel);

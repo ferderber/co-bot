@@ -56,7 +56,7 @@ export default class SoundCommand extends Command {
                 msg.reply("This command must be used in the comment of an attachment.");
             }
         } else if (args.get('operation') === 'remove') {
-            const sound = await manager.createQueryBuilder(Sound, 'u')
+            const sound = await manager.createQueryBuilder(Sound, 's')
                 .where("key ILIKE :key", { key: args.get('sound')})
                 .getOne();
             manager.remove(sound);

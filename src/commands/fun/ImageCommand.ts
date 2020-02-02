@@ -81,7 +81,7 @@ export default class ImageCommand extends Command {
 
     private async remove(msg: Message, imageName: string) {
         const manager = getManager();
-        const image = await manager.createQueryBuilder(Image, 'u')
+        const image = await manager.createQueryBuilder(Image, 'i')
             .where("key ILIKE :key", { key: imageName.toLowerCase()})
             .getOne();
         manager.remove(image);
@@ -96,7 +96,7 @@ export default class ImageCommand extends Command {
 
     private async display(msg: Message, imageName: string) {
         const manager = getManager();
-        const image = await manager.createQueryBuilder(Image, 'u')
+        const image = await manager.createQueryBuilder(Image, 'i')
             .where("key ILIKE :key", { key: imageName.toLowerCase()})
             .getOne();
         if (image) {

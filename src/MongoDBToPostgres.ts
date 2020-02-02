@@ -217,16 +217,15 @@ async function convertDatabase(con: Connection) {
     try {
         mongoose.connect(Config.db, { useMongoClient: true });
         const users = await getUsers();
-        console.log(users);
         const sounds = await getSounds();
         const images = await getImages();
-        const votes = await getVotes();
+        // const votes = await getVotes();
 
         const manager = con.createEntityManager();
         await manager.save(User, users);
         await manager.save(Sound, sounds);
-        await manager.save(Vote, votes);
         await manager.save(Image, images);
+        // await manager.save(Vote, votes);
     } catch (e) {
         console.error(e);
     }
