@@ -28,7 +28,8 @@ export default class SoundCommand extends Command {
         if (args.get('operation') === 'add') {
             const attachment = msg.attachments.first();
             if (attachment) {
-                const fileType = attachment.filename.substring(attachment.filename.lastIndexOf('.'));
+                // const fileType = attachment.filename.substring(attachment.filename.lastIndexOf('.'));
+                const fileType = attachment.name.substring(attachment.name.lastIndexOf('.'));
                 await FileManager.download(attachment.url, attachment.id + fileType);
                 const metadata = await FileManager.getMetadata(attachment.id + fileType);
                 let sound = new Sound({

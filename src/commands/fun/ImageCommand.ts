@@ -1,4 +1,4 @@
-import { Attachment } from 'discord.js';
+import { MessageAttachment } from 'discord.js';
 import { Argument, ArgumentType, Command, Message } from 'djs-cc';
 import { getManager } from 'typeorm';
 import { v4 } from 'uuid';
@@ -102,7 +102,7 @@ export default class ImageCommand extends Command {
         if (image) {
             msg.delete();
             msg.channel.send(`Image requested by: ${msg.author}`,
-                new Attachment(FileManager.getPath(image.filename)));
+                new MessageAttachment(FileManager.getPath(image.filename)));
         } else {
             msg.reply('Image not found');
         }

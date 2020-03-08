@@ -1,4 +1,4 @@
-import { RichEmbed } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 import { Argument, ArgumentType, Command, Message } from 'djs-cc';
 import safeEval from 'safe-eval';
 
@@ -34,12 +34,12 @@ export default class EvalCommand extends Command {
             msg,
         });
         const diff = process.hrtime(t);
-        const embed = new RichEmbed({
+        const embed = new MessageEmbed({
             color: 555,
             description: `Result: ${result}\nEval'd in \
             ${ Math.round((diff[0] * NS_PER_SEC + diff[1]) * MS_PER_NS) / 1000 } s`,
         });
-        embed.setAuthor(msg.author.username, msg.author.displayAvatarURL, null);
+        embed.setAuthor(msg.author.username, msg.author.avatarURL(), null);
         msg.channel.send(embed);
         return result;
 

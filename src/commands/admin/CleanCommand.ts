@@ -23,7 +23,7 @@ export default class CleanCommand extends Command {
     }
 
     public async run(msg: Message, args: Map<string, any>) {
-        let messages = await msg.channel.messages.last(args.get('numMessages'));
+        let messages = await (await msg.channel.messages.fetch({ limit: args.get('numMessages')})).array();
         let p: Promise<any>;
         messages = messages.filter((m) => m.author.id === args.get('user').id);
         if (messages.length > 1) {

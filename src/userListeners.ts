@@ -13,8 +13,8 @@ export function registerListeners(bot: Client): void {
     });
 
     setInterval(() => {
-        bot.guilds.forEach((guild) => {
-            guild.channels.forEach((channel) => {
+        bot.guilds.cache.forEach((guild) => {
+            guild.channels.cache.forEach((channel) => {
                 if (channel.type === 'voice' && channel.id !== guild.afkChannelID) {
                     (channel as VoiceChannel).members.forEach((member) => {
                         if (member.presence.status !== 'idle') {
@@ -43,13 +43,11 @@ async function giveExperience(guildMember: GuildMember, xp: number): Promise<voi
     }
     if (u.level >= 400) {
         const member = guildMember.lastMessage.member;
-        const role = member
-            .guild
-            .roles
+        const role = member.guild.roles.cache
             .find((r) => r.name === 'Elder');
-        if (role && !member.roles.has(role.id)) {
+        if (role && !member.roles.cache.has(role.id)) {
             console.log(`Promoting ${guildMember.displayName} to Elder`);
-            member.addRole(role);
+            member.roles.add(role);
         }
     }
     await manager.save(u);

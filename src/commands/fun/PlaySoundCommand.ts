@@ -28,7 +28,7 @@ export default class PlaySoundCommand extends Command {
     public async run(msg: Message, args: Map<string, any>) {
         const manager = getManager();
         const bot = msg.client;
-        const voiceChannel = msg.member.voiceChannel;
+        const voiceChannel = msg.member.voice.channel;
         const streamOptions = {
             volume: 0.5,
         };
@@ -49,7 +49,7 @@ export default class PlaySoundCommand extends Command {
                 const con = await this.connectToVoiceChannel(bot, voiceChannel);
                 if (con) {
                     try {
-                        con.playStream(ytdl(args.get('sound'), {
+                        con.play(ytdl(args.get('sound'), {
                             begin: args.get('time') ? args.get('time') : 0 + 's',
                             filter: 'audioonly',
                         }), streamOptions);
@@ -76,10 +76,10 @@ export default class PlaySoundCommand extends Command {
     }
 
     private async connectToVoiceChannel(bot: Client, voiceChannel: VoiceChannel) {
-        const existingConnection = bot.voiceConnections.find((con) => con.channel.id === voiceChannel.id);
+        const existingConnection = bot.voice.connections.find((con) => con.channel.id === voiceChannel.id);
         if (existingConnection === null || existingConnection === undefined ||
             existingConnection.channel.id !== voiceChannel.id) {
-            const connections = bot.voiceConnections.array();
+            const connections = bot.voice.connections.array();
             const disconnections: void[] = [];
             connections.forEach((connection) => disconnections.push(connection.disconnect()));
             await Promise.all(disconnections);
@@ -93,7 +93,7 @@ export default class PlaySoundCommand extends Command {
         this.incrementSoundsPlayCount(sound);
         this.incrementUsersPlayCount(user);
         try {
-            return con.playFile(path.join(os.homedir(), 'files', sound.filename));
+            return con.play(path.join(os.homedir(), 'files', sound.filename));
         } catch (err) {
             console.error(err);
         }
