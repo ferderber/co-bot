@@ -23,7 +23,7 @@ export default class RollCommand extends Command {
         });
     }
     public async run(msg: Message, args: Map<string, any>) {
-        let roll = 0;
+        let roll = '';
         let rollType = 'none';
         let iconUrl = 'https://i.imgur.com/aw0Oa4p.png';
         const rangeStartOrDice = args.get('rangeStartOrDice') || '';
@@ -35,17 +35,17 @@ export default class RollCommand extends Command {
         const diceMatch = rangeStartOrDice.match(/d\d+/i);
         if (rangeStartOrDice && diceMatch && !rangeEnd) {
             const diceValue = parseInt(diceMatch[0].slice(1), 10);
-            roll = Math.floor(Math.random() * diceValue + 1);
+            roll = `${Math.floor(Math.random() * diceValue + 1)}`;
             rollType = `D${diceValue} Roll`;
 
         } else if (!isNaN(startInt) && !isNaN(endInt)) {
             // if supplied two valid numbers, roll between the supplied ranges
-            roll = Math.floor(Math.random() * (endInt - startInt) + startInt);
+            roll = `${Math.floor(Math.random() * (endInt - startInt) + startInt)}`;
             rollType = `${startInt}-${endInt} Roll`;
 
         } else {
             // no args or incorrect args yields a 4chan-esque 6-digit message ID roll
-            roll = parseInt(msg.id.slice(-6), 10);
+            roll = msg.id.slice(-6);
             rollType = 'Message ID Roll';
             iconUrl = 'https://i.imgur.com/DYxXcYY.png';
         }
