@@ -22,7 +22,7 @@ export default class RollCommand extends Command {
             usage: 'roll d6 | !roll 1 6',
         });
     }
-    public async run(msg: Message, args: Map<string, any>) {
+    public async run(msg: Message, args: Map<string, any>): Promise<void> {
         let roll = '';
         let rollType = 'none';
         let iconUrl = 'https://i.imgur.com/aw0Oa4p.png';

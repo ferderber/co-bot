@@ -11,14 +11,16 @@ export class Config {
 
 export const TypeORMConfig: PostgresConnectionOptions = {
     type: "postgres",
-    host: process.env.POSTGRES_HOST,
+    host: process.env.POSTGRES_HOST || "localhost",
     port: 5432,
     database: "cobot",
     username: "web",
+    password: "web",
     synchronize: true,
     logging: true,
     entities: [
        __dirname + "/entity/**/*.js",
+       __dirname + "/entity/**/*.ts",
     ],
     migrations: [
        __dirname + "/migration/**/*.js",

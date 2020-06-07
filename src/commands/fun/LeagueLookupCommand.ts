@@ -1,6 +1,5 @@
 import { Argument, ArgumentType, Command, Message } from 'djs-cc';
 import { LeagueJS } from 'leaguejs';
-import {Config} from '../../Config';
 
 export default class LeagueLookupCommand extends Command {
     private api: LeagueJS;
@@ -24,9 +23,9 @@ export default class LeagueLookupCommand extends Command {
         // this.getChampions();
     }
 
-    public async run(msg: Message, args: Map<string, any>) {
+    public async run(msg: Message, args: Map<string, any>): Promise<void> {
         msg.reply("League lookup is currently disabled.");
-        return 0;
+        return;
         const username = args.get('username').replace(' ', '');
         if (username) {
             const tempMsg = await msg.reply('Loading data...') as Message;
@@ -37,7 +36,7 @@ export default class LeagueLookupCommand extends Command {
                     const recentList = matchList.slice(0, 10);
                     const recentGamePromises: any[] = [];
                     recentList.forEach((recent: any) => {
-                        recentGamePromises.push(this.api.Match.gettingById(recentList.gameId));
+                        recentGamePromises.push(this.api.Match.gettingById(recent.gameId));
                     });
 
                     const topThree = this.getChampionPlays(matchList).slice(0, 3);

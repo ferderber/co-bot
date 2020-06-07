@@ -24,9 +24,9 @@ export default class RemindCommand extends Command {
             usage: 'remind @Cobalt#7239 60 It\'s been 60 seconds',
         });
     }
-    public async run(msg: Message, args: Map<string, any>) {
+    public async run(msg: Message, args: Map<string, any>): Promise<void> {
         await msg.reply(':ok_hand: ' + args.get('time') + ' seconds');
-        await setTimeout(() =>
+        setTimeout(() =>
             msg.channel.send(args.get('user') + ': ' + args.get('message')), args.get('time') * 1000);
     }
 }

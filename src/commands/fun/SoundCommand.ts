@@ -23,7 +23,7 @@ export default class SoundCommand extends Command {
             usage: 'sound add soundname',
         });
     }
-    public async run(msg: Message, args: Map<string, any>) {
+    public async run(msg: Message, args: Map<string, any>): Promise<void> {
         const manager = getManager();
         if (args.get('operation') === 'add') {
             const attachment = msg.attachments.first();

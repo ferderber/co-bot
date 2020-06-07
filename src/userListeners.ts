@@ -1,4 +1,4 @@
-import { GuildMember, Role, VoiceChannel } from "discord.js";
+import { GuildMember, VoiceChannel } from "discord.js";
 import {Client} from 'djs-cc';
 import { getManager } from "typeorm";
 import { User } from './entity/User';

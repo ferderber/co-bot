@@ -31,7 +31,7 @@ export default class ImageCommand extends Command {
             usage: 'image imageName',
         });
     }
-    public async run(msg: Message, args: Map<string, any>) {
+    public async run(msg: Message, args: Map<string, any>): Promise<void> {
         const operationOrImage = args.get('operationOrImageName');
         const imageName = args.get('imageName');
         const imageUrl = args.get('imageUrl');

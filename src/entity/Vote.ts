@@ -1,4 +1,4 @@
-import { Column, Entity, Index, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, ManyToOne } from "typeorm";
 import {Sound} from "./Sound";
 import {User} from './User';
 

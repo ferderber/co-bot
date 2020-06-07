@@ -1,3 +1,4 @@
+import { Message as DjsMessage } from "discord.js";
 import { Argument, ArgumentType, Command, Message } from 'djs-cc';
 
 export default class CleanCommand extends Command {
@@ -22,24 +23,27 @@ export default class CleanCommand extends Command {
         });
     }
 
-    public async run(msg: Message, args: Map<string, any>) {
+    public async run(msg: Message, args: Map<string, any>): Promise<void> {
         let messages = await (await msg.channel.messages.fetch({ limit: args.get('numMessages')})).array();
         let p: Promise<any>;
         messages = messages.filter((m) => m.author.id === args.get('user').id);
         if (messages.length > 1) {
             p = msg.channel.bulkDelete(messages);
         } else if (messages.length === 1) {
-            p = messages[0].delete().then((a) => "Deleted one message");
+            p = messages[0].delete().then(() => "Deleted one message");
         }
+        let reply: DjsMessage;
         if (p) {
             await p;
-            msg.reply("Deleted " + messages.length + " messages");
+            reply = await msg.reply("Deleted " + messages.length + " messages");
         } else {
-            msg.reply("No messages found");
+            reply = await msg.reply("No messages found");
         }
+        // Delete message after 10s
+        setTimeout(() => reply.delete(), 10 * 1000);
     }
 
-    public hasPermission(msg: Message) {
+    public hasPermission(msg: Message): boolean {
         return msg.guild && msg.member.hasPermission('ADMINISTRATOR');
     }
 }

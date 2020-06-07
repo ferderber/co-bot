@@ -1,5 +1,5 @@
-import { GuildMember, VoiceChannel, VoiceConnection } from 'discord.js';
-import { Argument, ArgumentType, Client, Command, Message } from 'djs-cc';
+import { GuildMember, VoiceConnection } from 'discord.js';
+import { Argument, ArgumentType, Command, Message } from 'djs-cc';
 import * as os from 'os';
 import * as path from 'path';
 import { getManager } from 'typeorm';
@@ -25,9 +25,8 @@ export default class PlaySoundCommand extends Command {
             usage: 'play soundname',
         });
     }
-    public async run(msg: Message, args: Map<string, any>) {
+    public async run(msg: Message, args: Map<string, any>): Promise<void> {
         const manager = getManager();
-        const bot = msg.client;
         const voiceChannel = msg.member.voice.channel;
         const streamOptions = {
             volume: 0.5,
@@ -39,14 +38,14 @@ export default class PlaySoundCommand extends Command {
                     .limit(1)
                     .getOne();
                 if (sound) {
-                    const con = await this.connectToVoiceChannel(bot, voiceChannel);
+                    const con = await voiceChannel.join();
                     if (con) {
-                        return this.playSound(sound, msg.member, con);
+                        this.playSound(sound, msg.member, con);
                     }
                 }
-            } else if (/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/
+            } else if (/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)$/
                 .test(args.get('sound'))) {
-                const con = await this.connectToVoiceChannel(bot, voiceChannel);
+                const con = await voiceChannel.join();
                 if (con) {
                     try {
                         con.play(ytdl(args.get('sound'), {
@@ -62,9 +61,9 @@ export default class PlaySoundCommand extends Command {
                     .where("s.key ILIKE :key", { key: args.get('sound')})
                     .getOne();
                 if (sound) {
-                    const con = await this.connectToVoiceChannel(bot, voiceChannel);
+                    const con = await voiceChannel.join();
                     if (con) {
-                        return this.playSound(sound, msg.member, con);
+                        this.playSound(sound, msg.member, con);
                     }
                 } else {
                     msg.reply("Sound not found");
@@ -72,20 +71,6 @@ export default class PlaySoundCommand extends Command {
             }
         } else {
             msg.reply("You must be in a Voice channel to play a sound");
-        }
-    }
-
-    private async connectToVoiceChannel(bot: Client, voiceChannel: VoiceChannel) {
-        const existingConnection = bot.voice.connections.find((con) => con.channel.id === voiceChannel.id);
-        if (existingConnection === null || existingConnection === undefined ||
-            existingConnection.channel.id !== voiceChannel.id) {
-            const connections = bot.voice.connections.array();
-            const disconnections: void[] = [];
-            connections.forEach((connection) => disconnections.push(connection.disconnect()));
-            await Promise.all(disconnections);
-            return await voiceChannel.join();
-        } else {
-            return existingConnection;
         }
     }
 

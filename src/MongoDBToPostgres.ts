@@ -1,12 +1,13 @@
 import * as mongoose from 'mongoose';
 import 'reflect-metadata';
-import { Connection, createConnection, getManager } from 'typeorm';
+import { Connection, createConnection } from 'typeorm';
 import {Config, TypeORMConfig} from './Config';
 import { Image } from "./entity/Image";
 import { Sound } from "./entity/Sound";
 import { User } from "./entity/User";
 import { Vote } from "./entity/Vote";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (mongoose.Promise as any) = global.Promise;
 
 interface IImageSchema {
@@ -34,6 +35,7 @@ interface IVoteSchema {
 }
 
 interface IUserSchema {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     _id: any;
     username: string;
     avatar: string;
@@ -208,6 +210,7 @@ async function getImages(): Promise<Image[]> {
     return images.map(imageModelToEntity);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getVotes(): Promise<Vote[]> {
     const votes = await VoteModel.find({});
     return votes.map(voteModelToEntity);
@@ -234,5 +237,4 @@ async function convertDatabase(con: Connection) {
 createConnection(TypeORMConfig).then(async (con) => {
     console.log('DB Connection established');
     await convertDatabase(con);
-    const manager = con.createEntityManager();
 }).catch((error) => console.log(error));

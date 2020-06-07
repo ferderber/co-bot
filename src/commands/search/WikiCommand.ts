@@ -23,8 +23,8 @@ export default class WikiCommand extends Command {
         const page = await Wiki.page(data.results[0]);
         const summary = await page.summary();
         const image = await page.mainImage();
-        const info: any = await page.info();
-        return Promise.all([summary, image, info]).then((arr) => {
+        const info: Record<string, any> = await page.info();
+        return Promise.all([summary, image, info]).then(() => {
             const richEmbed = new MessageEmbed({
                 color: 555,
                 description: summary.split('\n').slice(0, 1).join('\n'),

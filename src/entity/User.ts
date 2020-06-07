@@ -1,4 +1,4 @@
-import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
 import {Image} from "./Image";
 import {Sound} from "./Sound";
 import {Vote} from "./Vote";

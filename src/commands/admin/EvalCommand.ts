@@ -20,11 +20,11 @@ export default class EvalCommand extends Command {
             usage: 'eval `10 + 10`',
         });
     }
-    public hasPermission(msg: Message) {
+    public hasPermission(msg: Message): boolean {
         return msg.guild && msg.member.hasPermission('ADMINISTRATOR');
     }
 
-    public async run(msg: Message, args: Map<string, any>) {
+    public async run(msg: Message, args: Map<string, any>): Promise<string> {
         const code = args.get('code');
 
         const t = process.hrtime();

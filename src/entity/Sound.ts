@@ -1,4 +1,4 @@
-import { Column, Entity, Generated, Index, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import {User} from './User';
 
 @Entity()

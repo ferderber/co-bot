@@ -7,7 +7,7 @@
     "start": "node dist/index.js",
     "db:convert": "node dist/MongoDBToPostgres.js",
     "build": "tsc",
-    "lint": "tslint --project ."
+    "lint": "yarn eslint . --ext .js,.ts"
   },
   "repository": {
     "type": "git",
@@ -24,40 +24,33 @@
   },
   "homepage": "https://github.com/matthewferderber/co-bot#readme",
   "dependencies": {
-    "@discordjs/opus": "^0.1.0",
+    "@discordjs/opus": "^0.3.2",
     "@types/mongoose": "^5.3.5",
     "@types/node": "^13.7.0",
     "@types/uuid": "^3.4.4",
     "bufferutil": "^4.0.1",
-    "discord.js": "^12.0.1",
+    "discord.js": "^12.2.0",
     "djs-cc": "^0.8.5",
     "erlpack": "discordapp/erlpack",
     "ffmpeg-static": "^4.0.0",
     "leaguejs": "^1.5.7",
     "mongoose": "^4.12.4",
     "music-metadata": "^3.3.2",
-    "node-opus": "^0.3.3",
     "pg": "^7.18.1",
     "reflect-metadata": "^0.1.12",
     "safe-eval": "^0.4.1",
-    "typeorm": "^0.2.9",
-    "typescript": "^3.7.5",
+    "typeorm": "^0.2.25",
+    "typescript": "^3.9.5",
     "uuid": "^3.3.2",
-    "wikijs": "^4.10.2",
+    "wikijs": "^6.0.1",
     "ws": "^6.1.0",
     "ytdl-core": "^1.0.7",
     "zlib-sync": "^0.1.6"
   },
   "devDependencies": {
-    "nodemon": "^1.18.4",
-    "tslint": "^5.12.0"
-  },
-  "eslintConfig": {
-    "parserOptions": {
-      "ecmaVersion": 8
-    },
-    "env": {
-      "node": true
-    }
+    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "@typescript-eslint/parser": "^3.1.0",
+    "eslint": "^7.2.0",
+    "nodemon": "^1.18.4"
   }
 }

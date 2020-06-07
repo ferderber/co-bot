@@ -16,7 +16,7 @@ export default class ProfileCommand extends Command {
             usage: 'profile @Cobalt#7239',
         });
     }
-    public async run(msg: Message, args: Map<string, any>) {
+    public async run(msg: Message, args: Map<string, any>): Promise<void> {
         const repo = getRepository(User);
         const user = await repo.findOne(args.get('user').id);
         if (user) {
