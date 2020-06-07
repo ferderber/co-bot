@@ -34,7 +34,7 @@
     "erlpack": "discordapp/erlpack",
     "ffmpeg-static": "^4.0.0",
     "leaguejs": "^1.5.7",
-    "mongoose": "^4.12.4",
+    "mongoose": "^5.7.5",
     "music-metadata": "^3.3.2",
     "pg": "^7.18.1",
     "reflect-metadata": "^0.1.12",
