@@ -37,7 +37,7 @@
     "mongoose": "^5.7.5",
     "music-metadata": "^3.3.2",
     "pg": "^7.18.1",
-    "reflect-metadata": "^0.1.12",
+    "reflect-metadata": "^0.1.13",
     "safe-eval": "^0.4.1",
     "typeorm": "^0.2.25",
     "typescript": "^3.9.5",

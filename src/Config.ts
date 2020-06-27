@@ -8,23 +8,3 @@ export class Config {
     public static readonly ownerId: string = process.env.DISCORD_BOT_OWNER_ID || '';
     public static readonly leagueToken: string = process.env.LEAGUE_API_KEY;
 }
-
-export const TypeORMConfig: PostgresConnectionOptions = {
-    type: "postgres",
-    host: process.env.POSTGRES_HOST || "localhost",
-    port: 5432,
-    database: "cobot",
-    username: "web",
-    password: "web",
-    synchronize: true,
-    logging: true,
-    entities: [
-       __dirname + "/entity/**/*.js",
-       __dirname + "/entity/**/*.ts",
-    ],
-    migrations: [
-       __dirname + "/migration/**/*.js",
-    ],
-};
-
-console.log(TypeORMConfig);

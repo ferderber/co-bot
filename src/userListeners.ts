@@ -1,5 +1,5 @@
 import { GuildMember, VoiceChannel } from "discord.js";
-import {Client} from 'djs-cc';
+import { Client } from 'djs-cc';
 import { getManager } from "typeorm";
 import { User } from './entity/User';
 
@@ -21,7 +21,6 @@ export function registerListeners(bot: Client): void {
                             console.log('Giving ' + member.user + ' 10 xp');
                             giveExperience(member, 10);
                         }
-
                     });
                 }
             });
@@ -31,10 +30,10 @@ export function registerListeners(bot: Client): void {
 
 async function giveExperience(guildMember: GuildMember, xp: number): Promise<void> {
     const manager = getManager();
-    let u = await manager.createQueryBuilder(User, 'u').where("u.id = :id", {id: guildMember.id}).getOne();
+    let u = await manager.createQueryBuilder(User, 'u').where("u.id = :id", { id: guildMember.id }).getOne();
     if (!u) {
         console.log("Adding user: " + guildMember.displayName);
-        u = new User({id: guildMember.id, username: guildMember.user.username, xp: 0, level: 1});
+        u = new User({ id: guildMember.id, username: guildMember.user.username, xp: 0, level: 1 });
     }
     u.xp += xp;
     if (u.xp >= 100) {

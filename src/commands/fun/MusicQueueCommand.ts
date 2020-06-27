@@ -1,4 +1,4 @@
-import { GuildMember, VoiceConnection, VoiceChannel } from 'discord.js';
+import { GuildMember, VoiceConnection, StreamDispatcher } from 'discord.js';
 import { Argument, ArgumentType, Command, Message } from 'djs-cc';
 import * as os from 'os';
 import * as path from 'path';
@@ -8,7 +8,8 @@ import { Sound } from '../../entity/Sound';
 import { User } from '../../entity/User';
 
 export default class MusicQueueCommand extends Command {
-    channel: VoiceChannel;
+    con: VoiceConnection;
+    stream: StreamDispatcher
     queue: Array<string>;
 
     constructor() {
@@ -21,26 +22,53 @@ export default class MusicQueueCommand extends Command {
             })],
             description: 'Queues a set of sounds / youtube links',
             name: 'queue-sound',
-            usage: 'queue soundname',
+            usage: 'queue add link',
         });
         this.queue = [];
     }
 
     private async playNext() {
-        const con = await this.channel.join();
-        if (con && this.queue.length >= 1) {
-            const stream = con.play(ytdl(this.queue[0], {filter: "audioonly"}));
-            stream.once("finish", () => {
+        if (this.con && this.queue.length >= 1) {
+            this.stream = this.con.play(ytdl(this.queue[0], {filter: "audioonly"}));
+            this.stream.once("finish", () => {
+                console.log("Finished");
                 this.queue.shift();
                 this.playNext();
             });
         }
     }
 
+    private async skip() {
+        if (this.stream) {
+            this.stream.end();
+        }
+    }
+
+    private async pause() {
+        this.stream.pause();
+    }
+
+    private async resume() {
+        this.stream.resume();
+    }
+
+    private async list(msg: Message) {
+        if (this.queue.length <= 0) {
+            msg.reply("Queue is empty");
+            return;
+        }
+        const queueString = this.queue.slice(0,3).map((v, i) => `${i+1}: ${v}`).join("\n");
+        msg.reply(`Next three:\n${queueString}`);
+    }
+
     private async startQueue(msg: Message) {
+        if (this.queue.length <= 0) {
+            msg.reply("Queue is empty");
+            return;
+        }
         const voiceChannel = msg.member.voice.channel
         if (voiceChannel) {
-            this.channel = voiceChannel
+            this.con = await voiceChannel.join();
             this.playNext();
         } else {
             msg.reply("You must be connected to a voice channel to start a music queue");
@@ -55,13 +83,23 @@ export default class MusicQueueCommand extends Command {
                 msg.reply(`Added to queue at position ${this.queue.length}`)
                 break;
             case "play":
+            case "start":
                 this.startQueue(msg);
                 break;
-            case "skip":
-                msg.reply("Not yet implemented.")
+            case "list":
+                this.list(msg);
                 break;
-                default:
-                    msg.reply("Invalid operation. Specify either `add` or `play`")
+            case "skip":
+                this.skip();
+                break;
+            case "pause":
+                this.pause();
+                break;
+            case "resume":
+                this.resume();
+                break;
+            default:
+                msg.reply("Invalid operation. Specify either `add` or `play`")
         }
     }
 

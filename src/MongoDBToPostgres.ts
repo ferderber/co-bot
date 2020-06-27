@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 import 'reflect-metadata';
 import { Connection, createConnection } from 'typeorm';
-import {Config, TypeORMConfig} from './Config';
+import { Config } from './Config';
 import { Image } from "./entity/Image";
 import { Sound } from "./entity/Sound";
 import { User } from "./entity/User";
@@ -234,7 +234,7 @@ async function convertDatabase(con: Connection) {
     }
 }
 
-createConnection(TypeORMConfig).then(async (con) => {
+createConnection().then(async (con) => {
     console.log('DB Connection established');
     await convertDatabase(con);
 }).catch((error) => console.log(error));
