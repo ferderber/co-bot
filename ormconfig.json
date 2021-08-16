@@ -1,24 +1,18 @@
 {
-    "type": "postgres",
-    "host": "localhost",
-    "port": 5432,
-    "username": "web",
-    "password": "web",
-    "database": "cobot",
-    "synchronize": true,
-    "logging": true,
-    "entities": [
-       "../src/**/*.entity.{ts,js}"
-    ],
-    "migrations": [
-       "dist/migration/**/*.js"
-    ],
-    "subscribers": [
-       "src/subscriber/**/*.ts"
-    ],
-    "cli": {
-       "entitiesDir": "src/entity",
-       "migrationsDir": "src/migration",
-       "subscribersDir": "src/subscriber"
-    }
- }
+  "type": "postgres",
+  "host": "localhost",
+  "port": 5432,
+  "username": "web",
+  "password": "web",
+  "database": "cobot",
+  "synchronize": true,
+  "logging": true,
+  "entities": ["build/**/entity/*.{ts,js}"],
+  "migrations": ["build/migration/**/*.js"],
+  "subscribers": ["src/subscriber/**/*.ts"],
+  "cli": {
+    "entitiesDir": "src/entity",
+    "migrationsDir": "src/migration",
+    "subscribersDir": "src/subscriber"
+  }
+}

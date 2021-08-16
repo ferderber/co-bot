@@ -2,5 +2,10 @@ files/
 .vscode/
 node_modules/
 npm-debug.log
-dist
 yarn-error.log
+dist
+build
+.DS_STORE
+*.db
+coverage
+*.tgz

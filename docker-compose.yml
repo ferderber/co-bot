@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   cobot:
     build: .
@@ -6,7 +6,7 @@ services:
     ports:
       - 3000:3000
     depends_on:
-      - postgres 
+      - postgres
     environment:
       - POSTGRES_HOST=postgres
       - NODE_ENV=development

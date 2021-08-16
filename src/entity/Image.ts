@@ -1,39 +1,38 @@
 import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
-import {User} from './User';
+import { User } from "./User";
 
 @Entity()
 export class Image {
+  @PrimaryColumn()
+  public id: string;
 
-    @PrimaryColumn()
-    public id: string;
+  @PrimaryColumn()
+  public key: string;
 
-    @PrimaryColumn()
-    public key: string;
+  @Column()
+  public filename: string;
 
-    @Column()
-    public filename: string;
+  @Column()
+  public fileType: string;
 
-    @Column()
-    public fileType: string;
+  @Column({ default: 0 })
+  public displayCount: number;
 
-    @Column({default: 0})
-    public displayCount: number;
+  @Column({ default: new Date() })
+  public dateUploaded: Date;
 
-    @Column({default: new Date()})
-    public dateUploaded: Date;
+  @ManyToOne(() => User, (u) => u.images)
+  public user: User;
 
-    @ManyToOne(() => User, (u) => u.images)
-    public user: User;
+  constructor(i: Partial<Image>) {
+    Object.assign(this, i);
+  }
 
-    constructor(i: Partial<Image>) {
-        Object.assign(this, i);
-    }
-
-    public toString(): string {
-        return `${this.key}:
+  public toString(): string {
+    return `${this.key}:
           Uploaded by: ${this.user.username}
           Display Count: ${this.displayCount}
           Filename: ${this.filename}
           Date Uploaded: ${this.dateUploaded}`;
-    }
+  }
 }
