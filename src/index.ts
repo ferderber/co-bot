@@ -16,6 +16,7 @@ const commandsPath = path.join(__dirname, "commands");
     const client = new Client([
       Intents.FLAGS.GUILDS,
       Intents.FLAGS.GUILD_MESSAGES,
+      Intents.FLAGS.GUILD_VOICE_STATES
     ]);
     client
       .on("error", console.error)
