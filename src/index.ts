@@ -5,6 +5,7 @@ import { createConnection } from "typeorm";
 import { Config } from "./Config";
 import { registerListeners } from "./userListeners";
 import { Intents } from "discord.js";
+import { generateDependencyReport } from '@discordjs/voice';
 
 const commandsPath = path.join(__dirname, "commands");
 
@@ -22,6 +23,7 @@ const commandsPath = path.join(__dirname, "commands");
       .on("ready", () => {
         console.log(`Client ready; logged in as ${client?.user?.username}\
                 #${client?.user?.discriminator} (${client?.user?.id})`);
+        console.log(generateDependencyReport());
         if (Config.env === "dev") {
           client?.user?.setPresence({
             status: "dnd",
