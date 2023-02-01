@@ -31,7 +31,7 @@
     "ffmpeg-static": "^4.4.0",
     "leaguejs": "^1.5.7",
     "libsodium-wrappers": "^0.7.9",
-    "mongoose": "^5.13.7",
+    "mongoose": "^5.13.15",
     "music-metadata": "^7.11.3",
     "pg": "^8.7.1",
     "reflect-metadata": "^0.1.13",
